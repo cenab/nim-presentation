@@ -1,0 +1,200 @@
+%-------------------------
+% Resume in Latex
+% Author : Jake Gutierrez
+% Based off of: https://github.com/sb2nov/resume
+% License : MIT
+%------------------------
+
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\input{glyphtounicode}
+
+
+%----------FONT OPTIONS----------
+% sans-serif
+% \usepackage[sfdefault]{FiraSans}
+% \usepackage[sfdefault]{roboto}
+% \usepackage[sfdefault]{noto-sans}
+% \usepackage[default]{sourcesanspro}
+
+% serif
+% \usepackage{CormorantGaramond}
+% \usepackage{charter}
+
+
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+% Ensure that generate pdf is machine readable/ATS parsable
+\pdfgentounicode=1
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textit{\small#1} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & #2 \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+%----------HEADING----------
+\begin{center}
+    \textbf{\Huge \scshape Batu Bora} \\ \vspace{1pt}
+    \small \href{mailto:hello@batubora.com}{hello@batubora.com} $|$ 
+    \href{https://github.com/cenab}{\underline{github.com/cenab}} $|$ 
+    \href{https://www.linkedin.com/in/cenab/}{\underline{linkedin.com/cenab}} $|$
+    \href{http://www.batubora.com}{\underline{batubora.com}}
+\end{center}
+
+
+%-----------EDUCATION-----------
+\section{Education}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {University of Alberta}{Sep. 2018 -- May 2023}
+      {Bachelor of Science in Computer Science}{Edmonton, AB}
+      % \resumeItemListStart
+      %   \resumeItem{\textbf{Relevant Coursework:} Search Knowledge and Simulation, Reinforcement Learning, Machine Learning, Automata Theory, Parallel and Distributed Systems, AI Capstone, Graph Theory}
+      % \resumeItemListEnd
+  \resumeSubHeadingListEnd
+
+%-----------EXPERIENCE-----------
+\section{Experience}
+\resumeSubHeadingListStart
+  \resumeSubheading
+    {Software Developer}{Mar. 2023 -- Present}
+    {Userful Corporation}{Calgary, Alberta}
+    \resumeItemListStart
+      \resumeItem{Led the end-to-end development of an enterprise SaaS solution utilizing \textbf{ReactJS, TypeScript,} and \textbf{Java Quarkus}.}
+      \resumeItem{Directed the development of a core serverless product on \textbf{AWS (Lambda, API Gateway, DynamoDB, SQS)}, optimizing both performance and scalability.}
+      \resumeItem{Spearheaded strategic partnerships with \textbf{Microsoft AI} and \textbf{Cisco}, driving joint solution development and expanding enterprise reach.}
+      \resumeItem{Fine-tuned large language models for resource-efficient Retrieval Augmented Generation (RAG), significantly improving performance and reducing latency.}
+      \resumeItem{Engineered robust data pipelines (\textbf{Airbyte}) for seamless integration with the \textbf{Qdrant vector database}, enhancing search and retrieval capabilities.}
+      \resumeItem{Developed advanced media processing solutions in \textbf{Rust}, leveraging \textbf{Gstreamer} and \textbf{FFMPEG}.}
+      \resumeItem{Designed and integrated critical pipeline components into the \textbf{CI/CD workflow}, streamlining deployments and ensuring high-quality releases.}
+    \resumeItemListEnd
+
+    \resumeSubheading
+      {Research Fellow}{Jan. 2025 -- Present}
+      {Ege University}{Izmir, Turkey}
+      \resumeItemListStart
+        \resumeItem{Developed "iShe," a full-stack, real-time conversational AI companion to support individuals with dementia.}
+        \resumeItem{Built the client in \textbf{React Native} and the server with \textbf{Express.js} and \textbf{Supabase} (PostgreSQL, pgvector), integrating \textbf{Whisper} and \textbf{OpenAI} to create the AI agent, hosted on \textbf{Microsoft Azure}.}
+        \resumeItem{Implemented features including secure authentication, voice/text interaction, vector similarity search for contextual understanding, and conversation history management.}
+      \resumeItemListEnd
+
+  \resumeSubheading
+    {Teaching Assistant}{Sep. 2022 -- Jan. 2023}
+    {Department of Computing Science, University of Alberta}{Edmonton, AB}
+    \resumeItemListStart
+      \resumeItem{Developed quiz and exam materials on \textbf{Deep Neural Networks}, \textbf{AlphaGo} architecture, and decision-making search algorithms for CMPUT 455.}
+      \resumeItem{Provided student support during office hours and contributed to course logistics through weekly TA meetings.}
+    \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+
+%-----------SKILLS-----------
+\section{Skills}
+\resumeSubHeadingListStart
+    \resumeItem{\textbf{Languages:} Java, TypeScript, JavaScript, Python, C++}
+    \resumeItem{\textbf{Frameworks:} Quarkus, ReactJS, Android, React Native, Django, Flask}
+    \resumeItem{\textbf{Databases/DevOps:} SQL, PostgreSQL, Qdrant, LanceDB, Git, NGINX, Linux}
+    \resumeItem{\textbf{Infrastructure:} Docker Compose, Kubernetes, Terraform, Microsoft Azure, AWS, Google Cloud Platform}
+    \resumeItem{\textbf{ML/AI:} LangChain, Ollama, Quantized LLM models, Celery}
+\resumeSubHeadingListEnd
+    
+%-----------RESEARCH-----------
+\section{Publications}
+\resumeSubHeadingListStart
+    \resumeProjectHeading
+        {\textbf{Network Identity Management: Application, Action and Device Aware Monitoring} $|$ IEEE COMPSAC 2025}{}
+        \resumeItemListStart
+          \resumeItem{Conceptualized and developed Network Identity Management (NIM), an ML-based system for identity-aware access control in encrypted applications, achieving a 98.6\% F1-score for application and perfect device identification.}
+          \resumeItem{Engineered a scalable, cloud-native Android traffic generation framework using \textbf{Google Cloud, Cuttlefish,} and \textbf{ADB}, emulating realistic multi-user, asynchronous group chat behaviors across eight IMAs.}
+          \resumeItem{Implemented advanced encrypted traffic analysis, leveraging flow-level metadata and ML models (including \textbf{Gradient Boosting}) to classify applications, devices, and user actions.}
+        \resumeItemListEnd
+        
+    \resumeProjectHeading
+        {\textbf{Predicting Time of Prostate Cancer Recurrence} $|$ \emph{University of Alberta}}{Jan. 2023 -- May 2023}
+        \resumeItemListStart
+          \resumeItem{Developed and evaluated machine learning models (\textbf{Random Survival Forest, Cox, Survival SVM}) in \textbf{Python} to predict prostate cancer recurrence from histopathology images and clinical data. Supervised by Professor Russ Grainer.}
+        \resumeItemListEnd
+\resumeSubHeadingListEnd
+
+%-----------PATENTS-----------
+\section{Patents}
+\resumeSubHeadingListStart
+    \resumeSubheading
+      {Systems and Methods for Advanced Content Presentation}{Jun. 2023}
+      {U.S. Patent Issued}{Userful Corporation}
+\resumeSubHeadingListEnd
+
+\end{document}

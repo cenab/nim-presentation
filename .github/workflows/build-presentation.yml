@@ -1,0 +1,53 @@
+name: Build Marp Presentation
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install --prefix config
+
+      - name: Build HTML
+        run: npm run build:html --prefix config
+
+      - name: Build PDF
+        run: npm run build:pdf --prefix config
+
+      - name: Upload HTML artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nim-presentation-html
+          path: presentations/nim-presentation.html
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nim-presentation-pdf
+          path: presentations/nim-presentation.pdf
+
+      # The .gitignore ensures built files are not tracked in main, only in the build branch
+      - name: Commit built files to build branch only
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git checkout --orphan build
+          git rm -rf .
+          cp presentations/nim-presentation.html .
+          cp presentations/nim-presentation.pdf .
+          git add nim-presentation.html nim-presentation.pdf
+          git commit -m 'Update built presentation files [ci skip]'
+          git push --force origin build 

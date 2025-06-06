@@ -1,0 +1,487 @@
+\documentclass[conference]{IEEEtran}
+\usepackage[utf8]{inputenc}
+
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{multirow}
+\usepackage{tikz}
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
+\usepackage{graphicx}
+\usepackage{svg}
+\usepackage{listings}
+%\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+%    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\addtolength{\topmargin}{+0.1cm} % had to add this to be able to submit to EDAS, don't touch
+    
+%\usepackage[
+%backend=biber,
+%style=alphabetic,
+%sorting=ynt
+%]{biblatex}
+
+\lstdefinelanguage{json}{
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    morestring=[b]",
+    morecomment=[l]{//},
+}
+
+%\addbibresource{bibliography.bib}  
+
+\begin{document}
+
+\title{Network Identity Management: Application, Action and Device‑Aware Monitoring }
+
+\author{\IEEEauthorblockN{Cenab Batu Bora}
+\IEEEauthorblockA{\textit{Faculty of Computing Science} \\
+\textit{University of Alberta}\\
+Edmonton, Canada \\
+cenab@ualberta.ca}
+\and
+\IEEEauthorblockN{Julia Silva Weber}
+\IEEEauthorblockA{\textit{Faculty of Computer Science} \\
+\textit{Dalhousie University}\\
+Halifax, Canada \\
+julia.weber@dal.ca}
+\and
+\IEEEauthorblockN{Nur Zincir-Heywood}
+\IEEEauthorblockA{ \textit{Faculty of Computer Science} \\
+\textit{Dalhousie University}\\
+Halifax, Canada \\
+zincir@cs.dal.ca}
+}
+
+\maketitle
+
+
+
+\begin{abstract}
+%Enterprise networks face significant security and compliance challenges as employees utilize a wide range of encrypted mobile applications on their unsecured devices, often bypassing workplace policies and potentially leading to possible policy violations or data leakage. It is often impossible for current firewall-based tools to enforce fine-grained access control over application features based on user roles and permissions within encrypted mobile applications.
+Instant Message applications (IMAs) are often used in sensitive environments where they pose a significant risk of accidental policy breaches or security lapses. %For instance, the 2021 Apple iMessage zero-day vulnerability allowed attackers to deploy Pegasus spyware, compromising user privacy without any user interaction. 
+This paper introduces techniques for Network Identity Management (NIM) targeting these high‑risk IMAs. NIM provides a novel approach that enables network-layer, identity-aware access control for encrypted applications. To provide the essential visibility layer for NIM, this paper presents techniques grounded in ML analysis of encrypted traffic metadata, trained using data from our scalable cloud-native Android traffic generation framework. Our ML framework accurately identifies: (1) the application in use, (2) the specific user action being performed, and (3) the originating device—using only encrypted traffic metadata from multi-user environments. With emulated traffic from eight IMAs for the primary task, our method achieves a 98.6\% F1-score via Gradient Boosting for application identification and near-perfect device identification based solely on encrypted traffic metadata. Furthermore, supplementary experiments provide initial validation for user action classification (group vs.one‑on‑one messaging), achieving 73.3\% F1-score in distinguishing between group chats and direct messages using environment-agnostic patterns. %Organizations can now tell which app and device each user or group is using. Combined with action-level visibility, this allows NIM to enforce policies proactively—before any misuse occurs—strengthening overall enterprise security.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Encrypted traffic analysis, instant messaging applications, AI/ML, network identity management 
+\end{IEEEkeywords}
+
+\section{Introduction}
+The use of powerful, encrypted mobile applications, often on employee-owned devices (BYOD), is widespread in enterprise and government networks. While essential for productivity, organizations must ensure these tools are used securely and compliantly, and must prevent accidental data leakage or unauthorized user actions. Crucially, this must be achieved while upholding user privacy and the security benefits provided by end-to-end encryption. Traditional policy enforcement methods relying on firewalls, domain blocking, and traffic inspection are incompatible with modern encryption standards. This necessitates innovative solutions like the proposed Network Identity Management (NIM), which aims to infer activity, such as which app is being used, which device it is coming from and what kind of action is being taken, like a video call or group chat. Application, action, and device identities are inferred through traffic pattern analysis. Based on this visibility, NIM can enforce granular, predefined permission levels or policies (e.g., restricting access to certain applications or high-risk features based on user roles) solely through communication patterns and information from encrypted traffic. Instant Messaging Applications (IMAs) exemplify tools where such pattern-based, policy-driven control is needed to mitigate risks proactively, moving beyond ineffective or excessive measures.
+
+To address this, this paper introduces foundational techniques for NIM, envisioning a network-layer Identity and Access Management system for encrypted traffic. Similar in principle to Role-Based Access Control, NIM aims to make context-aware access decisions based on verified identity before granting network access to specific applications and features. Such a system defines access groups based on organizational roles and assigns permissions for specific applications or resources to these groups. When a device connects, it is linked to a user identity and its associated group(s). The core challenge NIM addresses is discerning the application. %and potentially its features being accessed through the encrypted traffic to enforce these permissions.
+
+Our method analyzes encrypted traffic metadata to determine the application in use and the source device. Furthermore, by solely utilizing environment-agnostic structural patterns, we demonstrate the ability to differentiate specific communication features, successfully classifying between group chats and direct messages. Our results demonstrate that it is possible to identify, at the network level, information like 'User A's device is using Signal for group messaging', providing the necessary input for NIM policy decisions.
+
+Since our models can already distinguish between chat types, we believe other user actions or features (e.g., file transfer, voice call) may also generate unique, distinguishable traffic signatures. While identifying such feature-specific signatures represents a potential future enhancement for even more granular selective feature blocking, the primary focus enabled by the application and device identification demonstrated here is robust, application-level access control via NIM.
+
+Our work provides the foundational techniques for this vision with three key contributions:
+\begin{itemize}
+    \item \textbf{Introduce ML-based tracing of user actions, applications, and devices in encrypted traffic}: We demonstrate a novel ML-based method providing essential visibility into encrypted network traffic. By achieving high-precision in detecting the user action %(e.g., sending a message via direct message or group messaging), 
+    identifying the specific IMA, and identifying the originating device purely from metadata analysis %(98.6\% F1-score for apps, near-perfect for devices in emulation)
+    , this work establishes the critical foundation required to enable proactive, identity-driven Network Identity Management (NIM) and enforce Zero Trust principles.
+    \item \textbf{Architect a cloud-native traffic-generation framework}: We implemented a cloud-native emulation framework that overcomes the challenge of obtaining training data for encrypted applications. It allows for the safe, scalable, on-demand generation of diverse mobile application traffic datasets without relying on sensitive live user data. This methodological innovation is crucial for developing and validating robust NIM capabilities across a spectrum of applications, proven effective here for high-risk IMAs.
+    \item \textbf{Simulate realistic user behaviors in traffic generation}: Our framework moves beyond simplistic traffic simulation by incorporating realistic dialogues and asynchronous interaction patterns characteristic of modern mobile usage, particularly group chats. This high-fidelity emulation generates the nuanced traffic signatures essential for training ML models to accurately distinguish applications and devices, underpinning the feasibility of the entire metadata-based identification approach for NIM.
+\end{itemize}
+
+The remainder of this paper is organized as follows. Section II reviews encrypted traffic analysis and group chat classification. Section III details our framework, traffic generation and feature extraction. Section IV evaluates performance across ML models, and Section V discusses conclusions and future work.
+
+
+\section{Related work}
+
+Erdenebaatar et al. \cite{b1} use ML and an Android Studio virtual machine to analyze the network traffic of six IMAs.
+%, WhatsApp, Messenger, Telegram, Teams, Discord and Signal. 
+They utilized synchronous and asynchronous two-way text-based communications. Their framework automates IMA traffic generation, capturing and flow-level analysis for network activities.
+
+%, generating their own dataset made public available for the research community \footnote{https://ieee-dataport.org/documents/encrypted-mobile-instant-messaging-traffic-dataset}. %\cite{b14}. The best-performing model is the Random Forest which achieves more than 92\% of the F1 score on average.
+%Among the eight ML models benchmarked, the best-performing model is the Random Forest which achieves more than 92\% of the F1 score on average.
+
+%Oesch, Sean, et al \cite{b2} performed a survey of group chat users in order to understand the expectations and requirements for secure group chat. The IMAs WhatsApp, Telegram, Signal, Facebook Messenger, and iMessage were used. Based on those results, the authors suggest improvements to existing tools to help users stay secure. 
+
+Abiodun et al. \cite{b4} used enhanced honey encryption scheme for reinforcing the security of IMA systems and confounding the time and resources of malicious persons. While their experiments aim to reinforce the security in IMAs, only private conversation were tested, excluding a group chat scenario. 
+
+Shapira et al. \cite{b8} introduced a novel approach for encrypted Internet traffic classification, both for categorizing traffic types and for identifying specific applications, based only on time and size related information. %IMAs used were: Goggle Hangouts, Facebook, AIM Chat, Skype, ICQ, WhatsApp Web. 
+The authors do not specify if the datasets created used private chats or group chats.
+%While focusing in Machine Learning classification, authors does not specify if the datasets created used private chats or group chats. 
+%The dataset is made of capture files, each corresponds to a specific application, a traffic category and an encryption technique, 
+Their dataset is publicly available \cite{b13}. Their overall score for classification accuracy performance for chat IMAs was 89.3\% on average. 
+
+Shahraki et al. \cite{b9} reviewed the data stream processing tools and frameworks that can be used to process such data online or on-the-fly along with their pros and cons, and their integrability with de facto data processing frameworks. 
+
+Li, Zhida, et al. \cite{b16} explore the efficacy of various fast ML models including Gaussian Naive Bayes, K-Nearest Neighbors, Decision Tree, Random Forests, Extra-Trees, and XGBoost and evaluated on F1-Score. Based on their analysis, it helped us select our set of ML models.
+
+In comparison to previous works, our research explores traffic signatures for asynchronous and group chat communications of different IMAs in a virtual machine setting. We extend on the  Erdenebaatar et al.'s work \cite{b1} by focusing on group chats involving more than two users instead of one to one user communication. Moreover, we design and develop a cloud-based virtual infrastructure to scale up the user behaviors emulation, increased the number of IMAs used as well as improving the traffic capturing. 
+
+%We follow Erdenebaatar et al. paper using the same subset of Machine Learning (ML) algorithms, Naive Bayes, Decision Tree, Random Forest, Gradient Boosting, Logistic Regression and Support Vector Machine.We also used the same performance metrics.%, F1-score, Precision, Accuracy and Recall. 
+%Our work differs from others in that it focuses on group chats rather than individual communication. Many of the works use the same public domain tools to extract and process data, but with different configurations and infrastructure. This helps to show that the infrastructure and initial configuration do not impact the resulting performance metrics, which is one of the hypotheses we wanted to investigate.
+
+%One significant difference between our work and Erdenebaatar et al. is that we use communication between a group of users rather than private communication between 2 users. %Our environments are similar in that they 
+%Both works use the same tools to extract and process data, but with different configuration and infrastructure. This helps to show that the infrastructure and initial configuration have no impact on the performance of the capture and classification process, one of the hypotheses we wanted to investigate.
+
+\section{Methodology}
+%In this section, we outline the methodology employed for generating encrypted traffic and simulating Instant Messaging Application (IMA) traffic within our empirical study.
+
+\subsection{Experimental Objectives}
+
+This study aims to address the challenges of analyzing encrypted group chat traffic through two core objectives:
+
+\begin{itemize}
+    \item \textbf{Develop a User Behavior Emulation and Traffic Generation Framework}: Emulate and generate encrypted traffic for eight IMAs that realistically reflect human conversational patterns in group settings, including asynchronous messaging, multi-device participation, and variable group sizes.
+    \item \textbf{ML Models for Identification, Classification, and Action Tracing}: Train ML models to perform network-level user tracing, enabling network operations teams to map encrypted traffic flows to specific IMAs, actions, and their corresponding devices based solely on flow-level metadata. This provides the essential visibility required for NIM systems and lays the groundwork for future efforts to identify feature-specific traffic patterns for more granular control.
+\end{itemize}
+
+%Our codebase and dataset are publicly available to ensure reproducibility on GitHub\footnote{https://github.com/cenab/IMANetFlowOchestrator} and IEEE DataPort\footnote{https://github.com/cenab/IMANetFlowOchestrator}.
+
+\subsection{Emulation \& Traffic Generation Framework}\label{AA}
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.45\textwidth]{architecture.png}
+    \caption{Experiment architecture overview}
+    \label{fig:architecture}
+\end{figure}
+
+Figure \ref{fig:architecture} illustrates the end-to-end architecture for generating encrypted group chat traffic. Our system leverages three Google Cloud instances running Ubuntu 20.04 LTS to emulate Android smartphones via Android Cuttlefish\footnote{Each instance is provisioned with 2 vCPUs, 13 GB RAM, and 400 GB SSD storage.}. These instances host 8 popular IMAs to simulate multi-device group interactions.
+
+A Python-based orchestration framework coordinates message delivery. Clients execute OS-level commands (e.g., sending messages, switching apps) via Android Debug Bridge (ADB). Server manages message timing and IMA selection, synchronizing conversations across devices through WebSocket connections.
+
+We capture encrypted traffic using tcpdump, which generates PCAP files for downstream analysis. This cloud-native design enables horizontal scalability. Additional devices can be provisioned on-demand to simulate larger groups without hardware dependencies. These devices seamlessly connect to the server, thereby serving as one of our key contributions to IMA data generation.
+
+To replicate the organic dynamics of real-world group chats, our framework generates conversations that mirror human behavior across devices and IMAs. We define asynchronous chat as a multi-user interaction with irregular, delayed replies lacking strict timing or sequencing. Using publicly available data sources of natural dialogue, the system assigns lines to devices and applications (e.g., Slack, Signal) with randomized wait times (15–60 seconds) shown in Table \ref{tab:Top5TrimmedDialogue}, mimicking the irregular pacing of actual conversations—longer pauses for complex replies, shorter gaps for quick responses. Messages are limited to first 50 characters, emulating the brevity of mobile chats. By distributing dialogues to multiple IMAs (e.g., a debate starting in Teams and continuing in Telegram), the framework captures the multi-platform spontaneity of real group interactions. While this work focuses on general chat activity sufficient for IMA identification, future iterations aimed at feature-level identification would require generating traffic associated with distinct actions like voice call initiation, file uploading, or video streaming within each IMA.
+
+
+
+\begin{table}[!ht]
+\centering
+\caption{dialogue schedule snippet}
+\label{tab:Top5TrimmedDialogue}
+\resizebox{0.9\columnwidth}{!}{%
+\begin{tabular}{|l|c|c|c|}
+\hline
+\multicolumn{1}{|c|}{\textbf{Dialogue}} & \textbf{Device} & \textbf{IMA} & \textbf{Wait Time (seconds)} \\ \hline
+Nay, answer me. ...                      & 3              & signal       & 45                          \\ \hline
+He. ...                                  & 2              & signal       & 60                          \\ \hline
+You come most ...                        & 3              & teams        & 55                          \\ \hline
+Not a mouse ...                          & 3              & skype        & 58                          \\ \hline
+Well, good night. ...                    & 1              & signal       & 33                          \\ \hline
+\multicolumn{4}{|c|}{\textit{... conversation continues ...}} \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+\subsection{Traffic Orchestration and Client-Device Interaction}
+
+A Python-based orchestrator running on the server manages device-specific message queues, preventing bottlenecks as it schedules messages from the emulated dialogue data. Once the schedule is set, the orchestrator establishes a WebSocket connection, declares the number of devices to expect, and relays messages accordingly. As each Cuttlefish device registers via WebSocket, the server assigns it a numeric ID and routes the appropriate messages in real time.
+
+On the client side, each Cuttlefish device runs a script that receives server commands, executing them via the Android Debug Bridge (ADB). These commands emulate user interactions (e.g., taps, swipes, keyboard input) through predefined scripts. Consequently, each device sends text messages to group chats in multiple IMAs, automatically switching among apps to simulate realistic multi-application behavior. This integrated design allows us to capture concurrent traffic flows from multiple IMAs and devices in a synchronized manner.
+
+\subsection{Traffic Capture and Labeling}
+Encrypted traffic is captured using \texttt{tcpdump} and isolated through dynamic filters generated from \texttt{netstat} logs collected at 60-second intervals. These logs are processed into a JSON-structured session database recording IMA-specific ports, IP addresses, and timestamps (e.g., port \texttt{51558} active between UNIX epochs \texttt{1726056090--1726057619}). The following methodologies are then applied:
+
+\begin{itemize}
+    \item \textbf{Time-Bounded Port/IP Correlation}: Matches active ports/IPs from \texttt{netstat} logs (e.g., \texttt{192.168.97.2:59895 → 52.157.5.65:443}) with precise timestamps to create session-aware filters. For example, a Teams call on port \texttt{51558} would only be isolated during its recorded active windows.
+    
+    \item \textbf{TLS SNI Disambiguation}: Resolves port conflicts (e.g., Slack/WhatsApp on 443) by extracting SNI fields from TLS ClientHello packets (e.g., \texttt{*.signal.org} for Signal).
+    
+    \item \textbf{Application-Aware IP Whitelisting}: Identifies IMAs using known static IP ranges (e.g., Telegram's \texttt{51.81.11.66}), bypassing ephemeral port limitations.
+\end{itemize}
+
+\begin{lstlisting}[
+    language=,  % Remove "json" - this is Wireshark filter syntax
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    caption={Hypothetical Hybrid Wireshark filter combining time windows, IP whitelisting, and SNI validation for Discord.},
+    label={lst:wireshark}
+]
+((tcp.port == 51558 AND  // Discord sessions
+   frame.time_epoch >= 1726056090 AND 
+   frame.time_epoch <= 1726057619) OR
+  (tcp.port == 51558 AND 
+   frame.time_epoch >= 1726126204 AND 
+   frame.time_epoch <= 1726127414) OR
+  (ip.addr == 51.81.11.66 OR ip.addr == 51.81.47.120) OR  // Discord IP ranges
+  (tls.handshake.extensions_server_name contains "discord.org"))  // Discord SNI
+\end{lstlisting}
+
+\textbf{Filter Breakdown in Listing \ref{lst:wireshark}:}
+\begin{itemize}
+    \item Lines 1-4: Isolates Discord traffic on port \texttt{51558} during two recorded session windows.
+    \item Line 5: Tags Discord traffic using its known IP addresses recorded.
+    \item Lines 6-: Validates Discord traffic via SNI fields, resolving HTTPS/443 ambiguity.
+\end{itemize}
+
+After isolation of traffic, traffic flows are extracted using Tranalyzer2 \footnote{https://tranalyzer.com/} before labeling network traffic with the corresponding IMA. Tranalyzer2 determines 109 features, representing a broad range of traffic characteristics; this comprehensive set was chosen as a starting point for feature selection to ensure potential distinguishing patterns were captured.
+
+
+\subsection{Apps and Device Multi-classification}
+To identify both the IMAs and the source device, we first performed feature selection on the 109 extracted traffic attributes. Techniques such as mutual information and the ANOVA F-value were used to filter out the most relevant features, while hierarchical clustering with dendrograms helped reduce dimensionality.
+
+Next, we applied a multi-output approach, allowing simultaneous prediction of the IMA label and the originating device. We utilized both scikit-learn\footnote{https://scikit-learn.org} and cuML\footnote{https://rapids.ai/} libraries, enabling GPU/CPU-based training depending on each algorithm’s computational requirements. For instance, due to prolonged CPU training times (over 40 hours) on our dataset, we used cuML to accelerate Support Vector Machine training, while scikit-learn was employed for Decision Tree, Random Forest, Gradient Boosting and Naive Bayes.
+
+We evaluated each model’s performance using accuracy, precision, recall, and F1-score, and further analyzed results with confusion matrices. A 10-fold cross-validation was conducted to gauge the models’ consistency, capturing both average performance and potential worst-case scenarios.
+
+\subsection{Distinguishing the User Actions (Group vs. 1:1 Chat)}
+To validate if distinct communication types can be distinguished for granular NIM policies based on their intrinsic patterns, we conducted a binary classification experiment differentiating group vs. 1:1 chats. We used a combined dataset comprising direct messaging traffic data from Erdenebaatar et al.\cite{b1} and the group chat traffic data we generated (Section III-B/C) aiding the model in identifying fundamental structural differences.
+
+Our feature engineering focused explicitly on distilling core communication patterns thought to be inherent to the interaction type, rather than the network environment. We calculated relational ratios (e.g., sent/received bytes/packets) reflecting conversational balance, used normalized timing features (e.g., inter-arrival times) to capture relative pacing, and developed structural indicators of message flow, independent of absolute network speeds or latencies. Conversely, we excluded low-level TCP metrics (e.g., tcpSeqSntBytes, tcpWinSzChgDirCnt) potentially dominated by network conditions rather than the communication pattern itself, as these would be less reliable for a practical NIM system operating across varied environments.
+
+We evaluated several ML algorithms for classification, including those used for application/device identification (Section III-F). Gradient Boosting provided the best performance in differentiating group vs. 1:1 chats based on these distilled patterns. Structured cross-validation and dimensionality reduction were used throughout the evaluation to confirm that classification relied on meaningful behavioral patterns, suitable for reliable NIM decisions.
+
+\section{Evaluation and Results}
+
+\subsection{Dataset and Traffic Characteristics}
+
+As demonstrated by our results, this scalable approach successfully produced 37 hours of encrypted group chat traffic that closely mirrors real-device performance—even across eight IMAs—with consistent flow characteristics and sufficient variability to train our ML models. As shown in Table \ref{tab:flowExtraction}, Slack had the highest data volume (36.33 MB per device) and Teams produced the most flows (4,052 on Device 1). Device 1 consistently generated 15–20\% more traffic than Devices 2/3, likely due to the randomized emulated conversations (Section III-C).
+
+
+\subsection{Feature Selection and Impact}
+
+ANOVA F-value analysis (Table \ref{tab:TP}) identified critical features for distinguishing IMAs without decrypting messages: \begin{enumerate} 
+    \item \textbf{tcpMSS}: Differentiates Discord and Slack. 
+    \item \textbf{ipMaxdIPID}: Flags Signal, Skype, and Telegram. 
+    \item \textbf{tcpMinWinSz}: Highlights bulk transfers in Skype and Teams. 
+\end{enumerate} 
+These features are fundamental to our ML framework, directly enabling both application and device-level identification and supporting our ability to trace malicious activity.
+
+\begin{table}[!ht]
+\centering
+\caption{IMA Anova F-Value Top 5 Features}
+\label{tab:TP}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{|l|c|c|c|}
+\hline
+\multicolumn{1}{|c|}{\textbf{Rank}} & \textbf{Feature} & \textbf{\begin{tabular}[c]{@{}c@{}}Normalized \\ F-Score\end{tabular}} & \textbf{Description} \\ \hline
+1 & tcpMSS & 1.000 & \begin{tabular}[c]{@{}c@{}}Max bytes in a single TCP segment.\end{tabular} \\ \hline
+2 & ipMaxdIPID & 0.578 & \begin{tabular}[c]{@{}c@{}}Max IP ID delta between packets.\end{tabular} \\ \hline
+3 & ipMinTTL & 0.576 & \begin{tabular}[c]{@{}c@{}}Minimum TTL observed in IP packets.\end{tabular} \\ \hline
+4 & dstPort & 0.569 & \begin{tabular}[c]{@{}c@{}}Destination port number.\end{tabular} \\ \hline
+5 & tcpMinWinSz & 0.568 & \begin{tabular}[c]{@{}c@{}}Smallest TCP window size.\end{tabular} \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+\begin{table}[!ht]
+\centering
+\caption{IMA flow extraction information}
+\label{tab:flowExtraction}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{|l|l|c|c|c|}
+\hline
+                              & \multicolumn{1}{c|}{\textbf{IMA}} & \textbf{\# of Packets} & \textbf{Total Size (Mb)} & \textbf{Total \# of Flows} \\ \hline
+\multirow{8}{*}{Device 1} & Discord                           & 24878                 & 10                       & 612                        \\ \cline{2-5} 
+                              & Messenger                         & 39891                 & 12                       & 1556                       \\ \cline{2-5} 
+                              & RocketChat                        & 33680                 & 5                        & 499                        \\ \cline{2-5} 
+                              & Slack                             & 107303                & 36                       & 1838                       \\ \cline{2-5} 
+                              & Skype                             & 43825                 & 28                       & 2261                       \\ \cline{2-5} 
+                              & Signal                            & 54699                 & 10                       & 704                        \\ \cline{2-5} 
+                              & Teams                             & 70473                 & 37                       & 4052                       \\ \cline{2-5} 
+                              & Telegram                          & 23690                 & 5                        & 866                        \\ \hline
+\multirow{8}{*}{Device 2} & Discord                           & 24767                 & 7                        & 631                        \\ \cline{2-5} 
+                              & Messenger                         & 42945                 & 13                       & 1589                       \\ \cline{2-5} 
+                              & RocketChat                        & 32583                 & 5                        & 406                        \\ \cline{2-5} 
+                              & Slack                             & 113898                & 38                       & 1809                       \\ \cline{2-5} 
+                              & Skype                             & 37218                 & 24                       & 1774                       \\ \cline{2-5} 
+                              & Signal                            & 52069                 & 10                       & 824                        \\ \cline{2-5} 
+                              & Teams                             & 59543                 & 31                       & 3448                       \\ \cline{2-5} 
+                              & Telegram                          & 22958                 & 4                        & 812                        \\ \hline
+\multirow{8}{*}{Device 3} & Discord                           & 23586                 & 6                        & 596                        \\ \cline{2-5} 
+                              & Messenger                         & 34949                 & 11                       & 1477                       \\ \cline{2-5} 
+                              & RocketChat                        & 35241                 & 5                        & 431                        \\ \cline{2-5} 
+                              & Slack                             & 107275                & 35                       & 1791                       \\ \cline{2-5} 
+                              & Skype                             & 32635                 & 22                       & 1673                       \\ \cline{2-5} 
+                              & Signal                            & 53627                 & 10                       & 696                        \\ \cline{2-5} 
+                              & Teams                             & 52754                 & 27                       & 3163                       \\ \cline{2-5} 
+                              & Telegram                          & 23791                 & 4                        & 797                        \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+\subsection{Key Performance Indicators}
+
+Tree-based methods (Decision Tree, Random Forest, Gradient Boosting) excel on the 109-feature dataset (Table \ref{tab:MLDevresults}). In particular, the Gradient Boosting model achieved an F1-score exceeding 97\%.
+%while Logistic Regression achieved around 94\%, and both Naive Bayes and SVM underperformed by comparison. 
+Figure \ref{fig:example} illustrates a typical Gradient Boosting confusion matrix where most misclassifications are attributed to endpoint overlaps in Microsoft’s infrastructure or inherent model limitations.
+
+As demonstrated by our experimental results, our ML framework achieved a 98.6\% F1-score in distinguishing between eight IMAs, thereby confirming our goal of high-precision identification in complex, multi-user environments. A 10-fold cross-validation yielded a 98.6\% F1-score, and testing on a 20\% holdout subset achieved 97.8\%, thereby confirming the robustness of our approach.
+
+\begin{table*}[!ht]
+\centering
+\caption{Min-Max results}
+\label{tab:MinMaxeresults} 
+%\resizebox{\textwidth}{!}{%
+\resizebox{15cm}{!}{%
+\begin{tabular}{|l|ccc|ccc|ccc|}
+\hline
+\multicolumn{1}{|c|}{\multirow{2}{*}{\textbf{Model}}}            & \multicolumn{3}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}IMA Application\\ Classification\end{tabular}}}                                                                                                                                              & \multicolumn{3}{c|}{\textbf{Device Identification}}                                                                                                                                                                                              & \multicolumn{3}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Group vs 1.1 user action\\ Classification\end{tabular}}}                                                                                                                      \\ \cline{2-10} 
+\multicolumn{1}{|c|}{}                                           & \multicolumn{1}{l|}{\textit{Precision}}                                                & \multicolumn{1}{l|}{\textit{Recall}}                                                   & \multicolumn{1}{l|}{\textit{F1-Score}}                            & \multicolumn{1}{l|}{\textit{Precision}}                                               & \multicolumn{1}{l|}{\textit{Recall}}                                                  & \multicolumn{1}{l|}{\textit{F1-Score}}                           & \multicolumn{1}{l|}{\textit{Precision}}                                              & \multicolumn{1}{l|}{\textit{Recall}}                                        & \multicolumn{1}{l|}{\textit{F1-Score}}                          \\ \hline
+\begin{tabular}[c]{@{}l@{}}Naive \\ Bayes\end{tabular}           & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.673 -\\  0.715\end{tabular}}          & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.720 - \\ 0.762\end{tabular}}          & \begin{tabular}[c]{@{}c@{}}0.647 - \\ 0.700\end{tabular}          & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.2304 - \\ 0.4321\end{tabular}}       & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.3335 - \\ 0.3596\end{tabular}}       & \begin{tabular}[c]{@{}c@{}}0.1998 - \\ 0.2656\end{tabular}       & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.254-\\ 0.888\end{tabular}}          & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.369-\\ 0.89\end{tabular}}  & \begin{tabular}[c]{@{}c@{}}0.301-\\ 0.889\end{tabular}          \\ \hline
+\begin{tabular}[c]{@{}l@{}}Decision \\ Tree\end{tabular}         & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.964 -\\  0.975\end{tabular}}          & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.964 -\\  0.977\end{tabular}}          & \begin{tabular}[c]{@{}c@{}}0.965 -\\  0.975\end{tabular}          & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.9994 - \\ 1.0\end{tabular}}          & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.9994 -\\ 1.0\end{tabular}}           & \begin{tabular}[c]{@{}c@{}}0.9994 - \\ 1.0\end{tabular}          & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.274-\\ 0.878\end{tabular}}          & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.43-\\ 0.874\end{tabular}}  & \begin{tabular}[c]{@{}c@{}}0.335-\\ 0.876\end{tabular}          \\ \hline
+\begin{tabular}[c]{@{}l@{}}Random \\ Forest\end{tabular}         & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.968 - \\ 0.977\end{tabular}}          & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.967 - \\ 0.977\end{tabular}}          & \begin{tabular}[c]{@{}c@{}}0.967 - \\ 0.977\end{tabular}          & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.9951 - \\ 0.9973\end{tabular}}       & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.9949 -\\  0.9974\end{tabular}}       & \begin{tabular}[c]{@{}c@{}}0.9950 - \\ 0.9973\end{tabular}       & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.266-\\ 0.905\end{tabular}}          & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.404-\\ 0.894\end{tabular}} & \begin{tabular}[c]{@{}c@{}}0.321-\\ 0.898\end{tabular}          \\ \hline
+\begin{tabular}[c]{@{}l@{}}Gradient\\ Boosting\end{tabular}      & \multicolumn{1}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}0.977 - \\ 0.986\end{tabular}}} & \multicolumn{1}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}0.976 - \\ 0.985\end{tabular}}} & \textbf{\begin{tabular}[c]{@{}c@{}}0.976 - \\ 0.986\end{tabular}} & \multicolumn{1}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}0.9997 - \\ 1.0\end{tabular}}} & \multicolumn{1}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}0.9997 - \\ 1.0\end{tabular}}} & \textbf{\begin{tabular}[c]{@{}c@{}}0.9997 - \\ 1.0\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.275-\\ 0.909\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.435-\\ 0.903\end{tabular}} & \begin{tabular}[c]{@{}c@{}}0.337-\\ 0.905\end{tabular}          \\ \hline
+%\begin{tabular}[c]{@{}l@{}}Logistic\\ Regression\end{tabular}    & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.935 - \\ 0.950\end{tabular}}          & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.945 -\\  0.960\end{tabular}}          & \begin{tabular}[c]{@{}c@{}}0.939 - \\ 0.954\end{tabular}          & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.4065 - \\ 0.4304\end{tabular}}       & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.4112 - \\ 0.4349\end{tabular}}       & \begin{tabular}[c]{@{}c@{}}0.4071 - \\ 0.4299\end{tabular}       & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.636-\\ 0.991\end{tabular}}          & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.615-\\ 0.992\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}0.609-\\ 0.992\end{tabular}} \\ \hline
+\begin{tabular}[c]{@{}l@{}}Support Vector\\ Machine\end{tabular} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.695 - \\ 0.744\end{tabular}}          & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.750 -\\  0.768\end{tabular}}          & \begin{tabular}[c]{@{}c@{}}0.701 - \\ 0.729\end{tabular}          & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.2987 - \\ 0.3301\end{tabular}}       & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.3110 - \\ 0.3281\end{tabular}}       & \begin{tabular}[c]{@{}c@{}}0.2317 - \\ 0.2672\end{tabular}       & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.257-\\ 0.914\end{tabular}}          & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}0.376-\\ 0.917\end{tabular}} & \begin{tabular}[c]{@{}c@{}}0.305-\\ 0.915\end{tabular}          \\ \hline
+\end{tabular}%
+}
+\end{table*}
+
+
+%\begin{table*}[!ht]
+%\centering
+%\caption{IMA application classification min-max results}
+%\label{tab:MLDevresults} 
+%\resizebox{\textwidth}{!}{%
+%\resizebox{16cm}{!}{%
+%\begin{tabular}{|l|c|c|c|c|}
+%\hline
+%\multicolumn{1}{|c|}{\textbf{Model}} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+%Naive Bayes                          & 0.585 - 0.653     & 0.673 - 0.715      & 0.720 - 0.762   & 0.647 - 0.700     \\ \hline
+%Decision Tree                        & 0.953 - 0.965     & 0.964 - 0.975      & 0.964 - 0.977   & 0.965 - 0.975     \\ \hline
+%Random Forest                        & 0.953 - 0.963     & 0.968 - 0.977      & 0.967 - 0.977   & 0.967 - 0.977     \\ \hline
+%Gradient Boosting                    & \textbf{0.968 - 0.978}     & \textbf{0.977 - 0.986}      & \textbf{0.976 - 0.985}   & \textbf{0.976 - 0.986}     \\ \hline
+%Logistic Regression                  & 0.912 - 0.926     & 0.935 - 0.950      & 0.945 - 0.960   & 0.939 - 0.954     \\ \hline
+%Support Vector Machine               & 0.703 - 0.730     & 0.695 - 0.744      & 0.750 - 0.768   & 0.701 - 0.729     \\ \hline
+%\end{tabular}%
+%}
+%\end{table*}
+
+
+ \begin{figure}[!ht]
+     \centering
+     \includegraphics[width=0.45\textwidth]{Figure_2.png}
+     \caption{Gradient Boosting application confusion matrix}
+     \label{fig:example}
+ \end{figure}
+
+\subsection{Device Identification Results}
+
+For device identification, we assigned three labels (Device1, Device2, Device3) and observed that tree-based algorithms again delivered the highest performance (Table \ref{tab:MinMaxeresults}). The Gradient Boosting model achieved near-perfect results in our 10-fold tests—with eight folds reaching 100\% F1-score and the remaining two folds above 99.9\%. These findings underscore our framework’s ability to precisely map encrypted flows to specific devices, a critical aspect of our contribution. This precision is essential for real-world scenarios, such as tracing and isolating malicious or compromised devices in complex group chat environments, all without decrypting message contents.
+
+%\begin{table*}[!ht]
+%\centering
+%\caption{Device identification min-max results}
+%\label{tab:MLresults}
+%\resizebox{\textwidth}{!}{%
+%\resizebox{16cm}{!}{%
+%\begin{tabular}{|l|c|c|c|c|}
+%\hline
+%\multicolumn{1}{|c|}{\textbf{Model}} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+%Naive Bayes                          & 0.3141 - 0.3579   & 0.2304 - 0.4321    & 0.3335 - 0.3596 & 0.1998 - 0.2656   \\ \hline
+%Decision Tree                        & 0.9994 - 1.0      & 0.9994 - 1.0       & 0.9994 - 1.0    & 0.9994 - 1.0      \\ \hline
+%Random Forest                        & 0.9950 - 0.9974   & 0.9951 - 0.9973    & 0.9949 - 0.9974 & 0.9950 - 0.9973   \\ \hline
+%Gradient Boosting                    & \textbf{0.9997 - 1.0}      & \textbf{0.9997 - 1.0}       & \textbf{0.9997 - 1.0}    & \textbf{0.9997 - 1.0}      \\ \hline
+%Logistic Regression                  & 0.4093 - 0.4327   & 0.4065 - 0.4304    & 0.4112 - 0.4349 & 0.4071 - 0.4299   \\ \hline
+%Support Vector Machine               & 0.3284 - 0.3503   & 0.2987 - 0.3301    & 0.3110 - 0.3281 & 0.2317 - 0.2672   \\ \hline
+%\end{tabular}%
+%}
+%/end{table*}
+
+%\begin{table*}[!ht]
+%\centering
+%\caption{Group vs 1:1 user action classification min-max results}
+%\label{tab:MLDevresults} 
+%\resizebox{\textwidth}{!}{%
+%\resizebox{16cm}{!}{%
+%\begin{tabular}{|l|c|c|c|c|}
+%\hline
+%\multicolumn{1}{|c|}{\textbf{Model}} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+%Naive Bayes                          & 0.431-0.89     & 0.254-0.888      & 0.369-0.89   & 0.301-0.889     \\ \hline
+%Decision Tree                        & 0.503-0.877     & 0.274-0.878      & %0.43-0.874   & 0.335-0.876     \\ \hline
+%Random Forest                        & 0.472-0.9     & 0.266-0.905      & 0.404-0.894   & 0.321-0.898     \\ \hline
+%Gradient Boosting                    & 0.508-0.906     & 0.275-0.909      & 0.435-0.903   & 0.337-0.905     \\ \hline
+%\textbf{Logistic Regression}                  & 0.631-0.992     & 0.636-0.991      & 0.615-0.992   & \textbf{0.609-0.992}     \\ \hline
+%Support Vector Machine               & 0.44-0.915     & 0.257-0.914      & 0.376-0.917   & 0.305-0.915     \\ \hline
+%\end{tabular}%
+%}
+%\end{table*}
+
+
+\begin{table*}[!ht]
+\centering
+\caption{Group vs 1:1 user action classification for each IMA app for \textbf{Gradient Boosting}}
+\label{tab:MLDevresults} 
+%\resizebox{\textwidth}{!}{%
+\resizebox{10cm}{!}{%
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\multicolumn{1}{|c|}{\textbf{IMA}} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+\textbf{Discord}                         & 90.6\%     & 90.8\%      & 90.2\%   & \textbf{90.4\%}     \\ \hline
+Messenger                        & 82.2\%     & 82.4\%      & 80.5\%   & 81.1\%     \\ \hline
+Signal                        & 50.8\%     & 27.4\%      & 43.4\%   & 33.6\%     \\ \hline
+Slack                    & 72.4\%     & 72.3\%      & 71.8\%   & 71.9\%     \\ \hline
+Teams                 & 75.8\%     & 75.5.1\%      & 76.7\%   & 75.5\%     \\ \hline
+Telegram               & 85.5\%     & 86.3\%      & 84.9\%   & 85.2\%     \\ \hline
+\end{tabular}%
+}
+\end{table*}
+
+
+
+% \begin{figure}[!ht]
+%     \centering
+%     \includegraphics[width=0.45\textwidth]{Figure_3.png}
+%     \caption{Gradient Boosting device confusion matrix}
+%     \label{fig:example2}
+% \end{figure}
+
+\subsection{Chat Type Classification Results (Group vs. 1:1)}
+
+In the binary classification task designed to distinguish group chats from 1:1 chats using the environment-agnostic features described in Section III-G, promising results were obtained. Gradient Boosting achieved approximately 73.3\% F1-score overall. Performance varied significantly by application when evaluated using the F1-score metric for this task: classification for Discord reached 90.4\% F1, while Signal proved more challenging at 33.6\% F1, with other tested applications averaging around 78.4\% F1. While the overall accuracy and some individual scores are lower than the primary application/device identification results (which benefited from a richer feature set potentially including environment-specific cues), these findings, achieved across diverse datasets and with features deliberately chosen to minimize environmental bias, provide initial evidence that distinct communication structures (like group vs. 1:1 interaction) can indeed be differentiated based solely on encrypted traffic metadata patterns.
+
+These high F1-scores for application and device identification demonstrate the ability to reliably establish the necessary context using encrypted flow metadata within our emulated environment. These results meet our study’s core goal and lay the foundation for future work—accurate application and device context—for Network Identity Management (NIM) systems to make informed policy decisions. Furthermore, the ~73.3\% F1-score achieved in differentiating chat types suggests the potential for subsequently investigating finer-grained, feature-level traffic classification.
+
+
+\section{Discussion}
+\subsection{NIM: Network-Level Identity-Aware Access Control}
+The core capability demonstrated in this paper—accurate identification of application and originating device from encrypted flows—is a crucial enabler for Network Identity Management (NIM). This represents a paradigm shift towards implementing identity-aware access control directly at the network layer, even for encrypted applications.
+
+In a NIM deployment, organizations would define access groups based on roles (e.g., Developers, Executives, Contractors) and assign application permissions accordingly (e.g., Developers group allowed to have a group chat on Slack and Teams; Contractors group denied access to internal code repositories). When a device connects to the network, its traffic is associated with a verified user identity and their corresponding group memberships.
+
+The ML models developed in this research provide the critical input by determining when Device X (linked to User Y, Group Z) initiates a specific action within Application A. The NIM policy engine then checks if Group Z has permission for Application A. If not, the connection is blocked proactively at the network level, preventing unauthorized application access before it occurs. This embodies the principle of least privilege and aligns perfectly with Zero Trust architectures, demanding continuous verification and context-aware access decisions.
+
+\subsection{Enabling Selective Feature Blocking for Finer Control}
+Building on the basic application-level access control provided by NIM, there’s room to enforce even more detailed policies by selectively blocking features. Our ~73.3\% F1-score in distinguishing group chats from one-on-one chats—using carefully designed, environment-independent features—shows that it is possible to tell different types of user actions apart just by analyzing metadata. If future research confirms that other features also leave unique patterns in encrypted traffic, ML models could be trained to recognize these as well. This would allow NIM to enforce more specific policies, like: "Let the 'Developers' group use 'Slack', but block file uploads to external destinations," or "Allow the 'Sales' group to access 'Teams', but block group chat creation." While more research is needed to find stable, reliable patterns for each feature under different conditions, this approach could significantly expand what NIM can do.
+
+
+
+\section{Conclusion and Future work}
+Our framework achieves a 98.6\% F1-score (highlighted in Tables IV and V, assuming these correspond to application and device results respectively) in identifying encrypted group chat traffic, enabling device and application-level identification without compromising privacy, which makes it possible to implement Network Identity Management (NIM) in real networks. Our ML models, trained on flow-level data, can accurately link traffic to specific devices and IMAs—even under encryption—empowering network operation teams to manage or isolate network activities based on identity and policy without inspecting message content.
+
+We highlight four key innovations that make NIM practical for encrypted traffic analysis: user and device identification in multi-user group chats (e.g., pinpointing which phone is active) using encrypted traffic patterns; a cloud-based emulated traffic generator that removes specialized hardware requirements, enabling scalable model training over cloud; a group chat simulator employing conversational dialogues to emulate realistic usage patterns (e.g., bursts, delays, pauses) across platforms like Signal and Teams; and multi-IMA identification of eight messaging apps at a 98.6\% F1-score, surpassing prior 1:1 chat benchmarks.
+
+For future work, we plan to scale the data generation system to 20+ user groups, capturing richer multi-user dynamics. Additionally, we aim to explore Federated Learning approaches, allowing distributed model training without consolidating sensitive data—further preserving user privacy while potentially enabling collaborative NIM model improvements. 
+
+
+%\section*{Acknowledgment}
+
+
+
+%\printbibliography
+
+\begin{thebibliography}{00}
+\bibitem{b1} Erdenebaatar, Zolboo, et al. "Analyzing traffic characteristics of instant messaging applications on android smartphones." NOMS 2023-2023 IEEE/IFIP Network Operations and Management Symposium. IEEE, 2023.
+%\bibitem{b2} Oesch, Sean, et al. "User Perceptions of Security and Privacy for Group Chat." Digital Threats: Research and Practice (DTRAP) 3.2 (2022): 1-29.
+%\bibitem{b3} ”Tranalyzer: Lightweight flow generator,” 2022, https://tranalyzer.com/, Accessed: 2024-01-20.
+\bibitem{b4} Abiodun, Esther Omolara, et al. "Reinforcing the security of instant messaging systems using an enhanced honey encryption scheme: the case of WhatsApp." Wireless Personal Communications 112 (2020): 2533-2556.
+\bibitem{b5} Tang, Ying, and Khe Foon Hew. "Effects of using mobile instant messaging on student behavioral, emotional, and cognitive engagement: a quasi-experimental study." International Journal of Educational Technology in Higher Education 19.1 (2022): 3.
+\bibitem{b6} Dhir, Amandeep, Puneet Kaur, and Risto Rajala. "Continued use of mobile instant messaging apps: A new perspective on theories of consumption, flow, and planned behavior." Social Science Computer Review 38.2 (2020): 147-169.
+\bibitem{b7} Yuan, Chih-Hung, and Yenchun Jim Wu. "Mobile instant messaging or face-to-face? Group interactions in cooperative simulations." Computers in Human Behavior 113 (2020): 106508.
+\bibitem{b8} Shapira, Tal, and Yuval Shavitt. "FlowPic: A generic representation for encrypted traffic classification and applications identification." IEEE Transactions on Network and Service Management 18.2 (2021): 1218-1232.
+\bibitem{b9} Shahraki, Amin, et al. "A comparative study on online machine learning techniques for network traffic streams analysis." Computer Networks 207 (2022): 108836.
+\bibitem{b10} Lamping, Ulf, and Ed Warnicke. "Wireshark user's guide." Interface 4.6 (2004): 1
+%\bibitem{b11} ”scikit-learn” 2023, sklearn.feature\_selection.f\_classif, Accessed: 2024-7-20.
+%\bibitem{b12} ”cuML: Rapids GPU-Accelerated Machine Learning Library” 2023, https://rapids.ai/, Accessed: 2024-7-20.
+\bibitem{b13} ”FlowPic - Encrypted Traffic Classification” , 2019, https://www.eng.tau.ac.il/~shavitt/FlowPic.htm
+%\bibitem{b14} ”Encrypted Mobile Instant Messaging Traffic Dataset” 2023, https://ieee-dataport.org/documents/encrypted-mobile-instant-messaging-traffic-dataset
+%\bibitem{b15} ”FlowPic - Encrypted Traffic Classification” , 2019, https://www.eng.tau.ac.il/~shavitt/FlowPic.htm
+%\bibitem{b15} ”Hamlet, Prince of Denmark” by William Shakespeare, Project Gutenberg, 2008, https://www.gutenberg.org/files/27761/27761-h/27761-h.htm
+\bibitem{b16} Li, Z., Han, W., Shao, Y., \& Makanju, T. (2024, August). Enhancing Cybersecurity Through Fast Machine Learning Algorithms. In 2024 IEEE Canadian Conference on Electrical and Computer Engineering (CCECE) (pp. 905-909). IEEE.
+
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,8 @@
+# Ignore built presentation files in main branch
+presentations/nim-presentation.html
+presentations/nim-presentation.pdf
+
+# Allow these files in the build branch (handled by CI)
+# Source files and other outputs are not ignored 
+
+node_modules/
