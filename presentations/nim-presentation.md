@@ -22,8 +22,8 @@ Cenab Batu Bora¹, Julia Silva Weber², Nur Zincir-Heywood²
 *IEEE STPSA 2025 Workshop*
 
 <div style="display: flex; justify-content: center; align-items: center; gap: 2em; margin-top: 2em;">
-  <img src="assets/dalhousie.png" alt="Dalhousie University Logo" style="height: 80px; background-color: white; padding: 10px; border-radius: 10px;">
-  <img src="assets/alberta.png" alt="University of Alberta Logo" style="height: 80px; background-color: white; padding: 10px; border-radius: 10px;">
+  <img src="../assets/dalhousie.png" alt="Dalhousie University Logo" style="height: 80px; background-color: white; padding: 10px; border-radius: 10px;">
+  <img src="../assets/alberta.png" alt="University of Alberta Logo" style="height: 80px; background-color: white; padding: 10px; border-radius: 10px;">
 </div>
 
 
@@ -317,7 +317,7 @@ Cenab Batu Bora¹, Julia Silva Weber², Nur Zincir-Heywood²
 
 # Visualizing the Traffic Generation Framework
 
-<video src="assets/Real-life%20Click%20Farm.mp4" autoplay loop muted playsinline style="display: block; margin: auto; max-height: 75vh; max-width: 100%;"></video>
+<video src="../assets/Real-life%20Click%20Farm.mp4" autoplay loop muted playsinline style="display: block; margin: auto; max-height: 75vh; max-width: 100%;"></video>
 
 ---
 
