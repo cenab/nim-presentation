@@ -19,7 +19,7 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: npm install --prefix config
+        run: npm install
 
       - name: List presentations and themes directories
         run: |
@@ -36,7 +36,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: nim-presentation-html
-          path: presentations/nim-presentation.html
+          path: |
+            presentations/nim-presentation.html
+            assets/**
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
@@ -44,15 +46,34 @@ jobs:
           name: nim-presentation-pdf
           path: presentations/nim-presentation.pdf
 
-      # The .gitignore ensures built files are not tracked in main, only in the build branch
-      - name: Commit built files to build branch only
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build HTML
+        run: npm run build:html
+
+      - name: Prepare publish directory
         run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git checkout --orphan build
-          git rm -rf .
-          cp presentations/nim-presentation.html .
-          cp presentations/nim-presentation.pdf .
-          git add nim-presentation.html nim-presentation.pdf
-          git commit -m 'Update built presentation files [ci skip]'
-          git push --force origin build 
+          mkdir gh-pages
+          cp presentations/nim-presentation.html gh-pages/index.html
+          cp -r assets gh-pages/assets
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./gh-pages 
