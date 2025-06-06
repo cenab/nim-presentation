@@ -11,8 +11,8 @@ This project contains a Marp-based presentation for Network Identity Management 
 
 1. **Clone the repository** (if you haven't already):
    ```sh
-   git clone <your-repo-url>
-   cd nim-backend
+   git clone https://github.com/cenab/nim-presentation
+   cd nim-presentation
    ```
 
 2. **Install dependencies:**
