@@ -21,11 +21,16 @@ jobs:
       - name: Install dependencies
         run: npm install --prefix config
 
+      - name: List presentations and themes directories
+        run: |
+          ls -l presentations/
+          ls -l themes/
+
       - name: Build HTML
-        run: npm run build:html --prefix config
+        run: npx @marp-team/marp-cli presentations/nim-presentation.md --html --allow-local-files --theme-set themes/ -o presentations/nim-presentation.html
 
       - name: Build PDF
-        run: npm run build:pdf --prefix config
+        run: npx @marp-team/marp-cli presentations/nim-presentation.md --pdf --allow-local-files --theme-set themes/ -o presentations/nim-presentation.pdf
 
       - name: Upload HTML artifact
         uses: actions/upload-artifact@v4
