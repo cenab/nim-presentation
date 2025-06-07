@@ -6,3 +6,5 @@ presentations/nim-presentation.pdf
 # Source files and other outputs are not ignored 
 
 node_modules/
+.DS_Store
+.vscode/
