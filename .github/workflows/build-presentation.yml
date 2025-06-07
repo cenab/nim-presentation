@@ -26,6 +26,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Copy assets for build
+        run: |
+          # Create a temporary directory next to the presentation for building
+          mkdir -p presentations/assets
+          cp -r assets/* presentations/assets/
+          # Update image paths in the markdown
+          sed -i 's|"\.\./assets/|"./assets/|g' presentations/nim-presentation.md
+
       - name: Build HTML
         run: npm run build:html
 
@@ -39,6 +47,7 @@ jobs:
         run: |
           mkdir -p _site
           cp presentations/nim-presentation.html _site/index.html
+          # Copy assets to the root of the site
           cp -r assets _site/ || true
           cp -r themes _site/ || true
 
@@ -57,4 +66,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4 
+        uses: actions/deploy-pages@v4
