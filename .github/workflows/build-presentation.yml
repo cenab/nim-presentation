@@ -2,8 +2,13 @@ name: Build Marp Presentation
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
   pull_request:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   build:
@@ -49,7 +54,10 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout repository
@@ -68,12 +76,18 @@ jobs:
 
       - name: Prepare publish directory
         run: |
-          mkdir gh-pages
+          mkdir -p gh-pages
           cp presentations/nim-presentation.html gh-pages/index.html
-          cp -r assets gh-pages/assets
+          cp -r assets gh-pages/assets || true
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './gh-pages'
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./gh-pages 
+        id: deployment
+        uses: actions/deploy-pages@v4 
