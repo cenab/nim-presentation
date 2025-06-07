@@ -413,68 +413,64 @@ graph LR
     'lineColor': '#00b0ff',
     'secondaryColor': '#f3e5f5',
     'tertiaryColor': '#fff3e0',
-    'fontSize': '32px',
-    'messageFontSize': '32px',
+    'fontSize': '40px',
+    'messageFontSize': '40px',
     'messageFont': 'arial',
-    'nodeFontSize': '32px'
+    'nodeFontSize': '40px',
+    'edgeLabelBackground': '#ffffff',
+    'lineWidth': '20px'
   },
   'flowchart': {
-    'nodeSpacing': 40,
-    'rankSpacing': 50,
-    'padding': 10,
+    'nodeSpacing': 50,
+    'rankSpacing': 80,
+    'padding': 20,
     'width': 1600,
     'height': 500,
-    'diagramPadding': 0,
+    'diagramPadding': 10,
     'htmlLabels': true,
     'curve': 'basis'
   }
 }}%%
 graph LR
-    subgraph Capture["Data Capture"]
-        A["<div style='font-size: 1.6em; padding: 1.2em;'>Encrypted Traffic<br>Capture</div>"]
-    end
+    %% Data Capture Stage
+    A["<div style='padding: 1.8em; min-width: 250px;'><h3 style='margin:0; color: #0277bd; font-size: 1.8em;'>Data Capture</h3><div style='font-size: 1.9em; margin-top: 0.5em;'>Encrypted Traffic</div></div>"]
 
-    subgraph Processing["Traffic Processing"]
-        B["<div style='font-size: 1.6em; padding: 1.2em;'>Traffic Isolation</div>"]
-        DB[("<div style='font-size: 1.6em; padding: 1.2em;'>Session DB</div>")]
-        Methods{"<div style='font-size: 1.6em; padding: 1.2em;'>Isolation<br>Methods</div>"}
-    end
+    %% Processing Stage
+    B["<div style='padding: 1.8em; min-width: 250px;'><h3 style='margin:0; color: #7b1fa2; font-size: 1.8em;'>Traffic Isolation</h3><div style='font-size: 1.9em; margin-top: 0.5em;'>Initial Processing</div></div>"]
+    DB[("<div style='padding: 1.8em;'><h3 style='margin:0; color: #7b1fa2; font-size: 1.8em;'>Session DB</h3><div style='font-size: 1.9em; margin-top: 0.5em;'>Traffic Metadata</div></div>")]
+    Methods{"<div style='padding: 1.8em;'><h3 style='margin:0; color: #7b1fa2; font-size: 1.8em;'>Analysis</h3><div style='font-size: 1.9em; margin-top: 0.5em;'>Isolation Methods</div></div>"}
 
-    subgraph Techniques["Isolation Techniques"]
-        B1["<div style='font-size: 1.6em; padding: 1.2em;'>Time-Bounded<br>Correlation</div>"]
-        B2["<div style='font-size: 1.6em; padding: 1.2em;'>TLS SNI<br>Analysis</div>"]
-        B3["<div style='font-size: 1.6em; padding: 1.2em;'>IP Range<br>Validation</div>"]
-    end
+    %% Isolation Techniques
+    B1["<div style='padding: 1.8em;'><h3 style='margin:0; color: #ef6c00; font-size: 1.8em;'>Time Analysis</h3><div style='font-size: 1.9em; margin-top: 0.5em;'>Bounded Correlation</div></div>"]
+    B2["<div style='padding: 1.8em;'><h3 style='margin:0; color: #ef6c00; font-size: 1.8em;'>TLS Analysis</h3><div style='font-size: 1.9em; margin-top: 0.5em;'>SNI Inspection</div></div>"]
+    B3["<div style='padding: 1.8em;'><h3 style='margin:0; color: #ef6c00; font-size: 1.8em;'>IP Analysis</h3><div style='font-size: 1.9em; margin-top: 0.5em;'>Range Validation</div></div>"]
 
-    subgraph Output["Results"]
-        C["<div style='font-size: 1.6em; padding: 1.2em;'>Clean IMA<br>Traffic</div>"]
-    end
+    %% Output Stage
+    C["<div style='padding: 1.8em; min-width: 250px;'><h3 style='margin:0; color: #2e7d32; font-size: 1.8em;'>Results</h3><div style='font-size: 1.9em; margin-top: 0.5em;'>Clean IMA Traffic</div></div>"]
 
-    A --> B
-    B --> |"<div style='font-size: 1.5em;'>netstat logs</div>"| DB
-    DB --> Methods
-    Methods --> B1 & B2 & B3
-    B1 & B2 & B3 --> C
+    %% Connections with descriptive labels
+    A --> |"<div style='font-size: 1.9em;'>Raw Traffic</div>"| B
+    B --> |"<div style='font-size: 1.9em;'>Session Data</div>"| DB
+    DB --> |"<div style='font-size: 1.9em;'>Analysis Input</div>"| Methods
+    Methods --> |"<div style='font-size: 1.9em;'>Time-based</div>"| B1
+    Methods --> |"<div style='font-size: 1.9em;'>Protocol</div>"| B2
+    Methods --> |"<div style='font-size: 1.9em;'>Network</div>"| B3
+    B1 & B2 & B3 --> |"<div style='font-size: 1.9em;'>Validated Traffic</div>"| C
 
-    classDef capture fill:#e1f5fe,stroke:#00b0ff,stroke-width:5px,rx:15,ry:15
-    classDef processing fill:#f3e5f5,stroke:#9c27b0,stroke-width:4px,rx:12,ry:12
-    classDef techniques fill:#fff3e0,stroke:#ff9100,stroke-width:4px,rx:12,ry:12
-    classDef output fill:#e8f5e9,stroke:#43a047,stroke-width:5px,rx:15,ry:15
+    %% Styling definitions with thicker borders
+    classDef capture fill:#e1f5fe,stroke:#00b0ff,stroke-width:12px,rx:12,ry:12
+    classDef processing fill:#f3e5f5,stroke:#9c27b0,stroke-width:12px,rx:12,ry:12
+    classDef techniques fill:#fff3e0,stroke:#ff9100,stroke-width:12px,rx:12,ry:12
+    classDef output fill:#e8f5e9,stroke:#43a047,stroke-width:12px,rx:12,ry:12
 
+    %% Apply styles to nodes
     class A capture
     class B,DB,Methods processing
     class B1,B2,B3 techniques
     class C output
 
-    %% Add styling for better text visibility
-    style A font-weight:bold,font-size:32px
-    style B font-weight:bold,font-size:32px
-    style DB font-weight:bold,font-size:32px
-    style Methods font-weight:bold,font-size:32px
-    style B1 font-weight:bold,font-size:32px
-    style B2 font-weight:bold,font-size:32px
-    style B3 font-weight:bold,font-size:32px
-    style C font-weight:bold,font-size:32px
+    %% Link styling
+    linkStyle default stroke-width:8px
 ```
 
 </div>
@@ -530,76 +526,69 @@ graph LR
     'lineColor': '#00b0ff',
     'secondaryColor': '#f3e5f5',
     'tertiaryColor': '#fff3e0',
-    'fontSize': '20px',
-    'messageFontSize': '20px',
+    'fontSize': '40px',
+    'messageFontSize': '40px',
     'messageFont': 'arial',
-    'nodeFontSize': '20px'
+    'nodeFontSize': '40px',
+    'edgeLabelBackground': '#ffffff',
+    'lineWidth': '20px'
   },
   'flowchart': {
-    'nodeSpacing': 20,
-    'rankSpacing': 30,
-    'padding': 5,
-    'width': 1200,
-    'height': 400,
-    'diagramPadding': 0,
+    'nodeSpacing': 50,
+    'rankSpacing': 80,
+    'padding': 20,
+    'width': 1600,
+    'height': 500,
+    'diagramPadding': 10,
     'htmlLabels': true,
     'curve': 'basis'
   }
 }}%%
 graph LR
-    subgraph Input["Data Input"]
-        A["<div style='font-size: 1.2em; padding: 0.5em;'>Labeled Traffic<br>Flows</div>"]
-    end
+    %% Input Stage
+    A["<div style='padding: 1.8em; min-width: 250px;'><h3 style='margin:0; color: #0277bd; font-size: 1.8em;'>Data Input</h3><div style='font-size: 1.9em; margin-top: 0.5em;'>Labeled Traffic Flows</div></div>"]
 
-    subgraph Features["Feature Processing"]
-        B["<div style='font-size: 1.2em; padding: 0.5em;'>Raw Feature<br>Extraction</div>"]
-        C["<div style='font-size: 1.2em; padding: 0.5em;'>Feature Selection</div>"]
-    end
+    %% Feature Processing Stage
+    B["<div style='padding: 1.8em; min-width: 250px;'><h3 style='margin:0; color: #7b1fa2; font-size: 1.8em;'>Feature Processing</h3><div style='font-size: 1.9em; margin-top: 0.5em;'>Raw Feature Extraction</div></div>"]
+    C["<div style='padding: 1.8em; min-width: 250px;'><h3 style='margin:0; color: #7b1fa2; font-size: 1.8em;'>Feature Selection</h3><div style='font-size: 1.9em; margin-top: 0.5em;'>Feature Engineering</div></div>"]
 
-    subgraph Models["ML Models"]
-        D["<div style='font-size: 1.2em; padding: 0.5em;'>Multi-Output<br>Classifiers</div>"]
-        G["<div style='font-size: 1.2em; padding: 0.5em;'>Binary<br>Classifier</div>"]
-    end
+    %% Models Stage
+    D["<div style='padding: 1.8em; min-width: 250px;'><h3 style='margin:0; color: #ef6c00; font-size: 1.8em;'>Multi-Output</h3><div style='font-size: 1.9em; margin-top: 0.5em;'>App & Device Classifier</div></div>"]
+    G["<div style='padding: 1.8em; min-width: 250px;'><h3 style='margin:0; color: #ef6c00; font-size: 1.8em;'>Binary</h3><div style='font-size: 1.9em; margin-top: 0.5em;'>Group vs 1:1 Classifier</div></div>"]
 
-    subgraph Engineering["Feature Engineering"]
-        F["<div style='font-size: 1.2em; padding: 0.5em;'>Action-Specific<br>Features</div>"]
-    end
+    %% Engineering Stage
+    F["<div style='padding: 1.8em; min-width: 250px;'><h3 style='margin:0; color: #1565c0; font-size: 1.8em;'>Action-Specific</h3><div style='font-size: 1.9em; margin-top: 0.5em;'>Feature Engineering</div></div>"]
 
-    subgraph Predictions["Predictions"]
-        E["<div style='font-size: 1.2em; padding: 0.5em;'>App & Device<br>98.6% F1-Score</div>"]
-        H["<div style='font-size: 1.2em; padding: 0.5em;'>Group vs 1:1<br>73.3% F1-Score</div>"]
-    end
+    %% Output Stage
+    E["<div style='padding: 1.8em; min-width: 250px;'><h3 style='margin:0; color: #2e7d32; font-size: 1.8em;'>App & Device</h3><div style='font-size: 1.9em; margin-top: 0.5em;'>98.6% F1-Score</div></div>"]
+    H["<div style='padding: 1.8em; min-width: 250px;'><h3 style='margin:0; color: #2e7d32; font-size: 1.8em;'>Group vs 1:1</h3><div style='font-size: 1.9em; margin-top: 0.5em;'>73.3% F1-Score</div></div>"]
 
-    A --> B
-    B --> C
-    C --> D
-    D --> E
+    %% Connections with descriptive labels
+    A --> |"<div style='font-size: 1.9em;'>Raw Data</div>"| B
+    B --> |"<div style='font-size: 1.9em;'>Features</div>"| C
+    C --> |"<div style='font-size: 1.9em;'>Selected Features</div>"| D
+    D --> |"<div style='font-size: 1.9em;'>Classification</div>"| E
     
-    B --> F
-    F --> G
-    G --> H
+    B --> |"<div style='font-size: 1.9em;'>Raw Features</div>"| F
+    F --> |"<div style='font-size: 1.9em;'>Engineered Features</div>"| G
+    G --> |"<div style='font-size: 1.9em;'>Classification</div>"| H
 
-    classDef input fill:#e1f5fe,stroke:#00b0ff,stroke-width:3px,rx:10,ry:10
-    classDef features fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px,rx:8,ry:8
-    classDef models fill:#fff3e0,stroke:#ff9100,stroke-width:2px,rx:8,ry:8
-    classDef engineering fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,rx:8,ry:8
-    classDef predictions fill:#e8f5e9,stroke:#43a047,stroke-width:3px,rx:10,ry:10
+    %% Styling definitions with thicker borders
+    classDef input fill:#e1f5fe,stroke:#00b0ff,stroke-width:6px,rx:12,ry:12
+    classDef features fill:#f3e5f5,stroke:#9c27b0,stroke-width:6px,rx:12,ry:12
+    classDef models fill:#fff3e0,stroke:#ff9100,stroke-width:6px,rx:12,ry:12
+    classDef engineering fill:#e3f2fd,stroke:#1565c0,stroke-width:6px,rx:12,ry:12
+    classDef output fill:#e8f5e9,stroke:#43a047,stroke-width:6px,rx:12,ry:12
 
+    %% Apply styles to nodes
     class A input
     class B,C features
     class D,G models
     class F engineering
-    class E,H predictions
+    class E,H output
 
-    %% Add styling for better text visibility
-    style A font-weight:bold,font-size:20px
-    style B font-weight:bold,font-size:20px
-    style C font-weight:bold,font-size:20px
-    style D font-weight:bold,font-size:20px
-    style E font-weight:bold,font-size:20px
-    style F font-weight:bold,font-size:20px
-    style G font-weight:bold,font-size:20px
-    style H font-weight:bold,font-size:20px
+    %% Link styling
+    linkStyle default stroke-width:4px
 ```
 
 </div>
