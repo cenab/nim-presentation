@@ -548,26 +548,26 @@ graph LR
 }}%%
 graph LR
     subgraph Input["Data Input"]
-        A["<div style='font-size: 1.2em; padding: 0.5em;'>📊 Labeled Traffic<br>Flows</div>"]
+        A["<div style='font-size: 1.2em; padding: 0.5em;'>Labeled Traffic<br>Flows</div>"]
     end
 
     subgraph Features["Feature Processing"]
-        B["<div style='font-size: 1.2em; padding: 0.5em;'>🔢 Raw Feature<br>Extraction</div>"]
-        C["<div style='font-size: 1.2em; padding: 0.5em;'>📈 Feature Selection</div>"]
+        B["<div style='font-size: 1.2em; padding: 0.5em;'>Raw Feature<br>Extraction</div>"]
+        C["<div style='font-size: 1.2em; padding: 0.5em;'>Feature Selection</div>"]
     end
 
     subgraph Models["ML Models"]
-        D["<div style='font-size: 1.2em; padding: 0.5em;'>🤖 Multi-Output<br>Classifiers</div>"]
-        G["<div style='font-size: 1.2em; padding: 0.5em;'>🔄 Binary<br>Classifier</div>"]
+        D["<div style='font-size: 1.2em; padding: 0.5em;'>Multi-Output<br>Classifiers</div>"]
+        G["<div style='font-size: 1.2em; padding: 0.5em;'>Binary<br>Classifier</div>"]
     end
 
     subgraph Engineering["Feature Engineering"]
-        F["<div style='font-size: 1.2em; padding: 0.5em;'>⚙️ Action-Specific<br>Features</div>"]
+        F["<div style='font-size: 1.2em; padding: 0.5em;'>Action-Specific<br>Features</div>"]
     end
 
     subgraph Predictions["Predictions"]
-        E["<div style='font-size: 1.2em; padding: 0.5em;'>🎯 App & Device<br>98.6% F1-Score</div>"]
-        H["<div style='font-size: 1.2em; padding: 0.5em;'>👥 Group vs 1:1<br>73.3% F1-Score</div>"]
+        E["<div style='font-size: 1.2em; padding: 0.5em;'>App & Device<br>98.6% F1-Score</div>"]
+        H["<div style='font-size: 1.2em; padding: 0.5em;'>Group vs 1:1<br>73.3% F1-Score</div>"]
     end
 
     A --> B
