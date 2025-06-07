@@ -35,10 +35,17 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
+      - name: Prepare deployment directory
+        run: |
+          mkdir -p _site
+          cp presentations/nim-presentation.html _site/index.html
+          cp -r assets _site/ || true
+          cp -r themes _site/ || true
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: presentations
+          path: _site
 
   deploy:
     environment:
