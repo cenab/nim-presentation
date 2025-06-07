@@ -27,10 +27,10 @@ jobs:
           ls -l themes/
 
       - name: Build HTML
-        run: npx @marp-team/marp-cli presentations/nim-presentation.md --html --allow-local-files --theme-set themes/ -o presentations/nim-presentation.html
+        run: npm run build:html
 
       - name: Build PDF
-        run: npx @marp-team/marp-cli presentations/nim-presentation.md --pdf --allow-local-files --theme-set themes/ -o presentations/nim-presentation.pdf
+        run: npm run build:pdf
 
       - name: Upload HTML artifact
         uses: actions/upload-artifact@v4
