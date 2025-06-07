@@ -2,7 +2,7 @@ name: Build Marp Presentation
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   pull_request:
 
 permissions:
@@ -26,59 +26,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: List presentations and themes directories
-        run: |
-          ls -l presentations/
-          ls -l themes/
-
       - name: Build HTML
         run: npm run build:html
 
       - name: Build PDF
         run: npm run build:pdf
-
-      - name: Upload HTML artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: nim-presentation-html
-          path: |
-            presentations/nim-presentation.html
-            assets/**
-
-      - name: Upload PDF artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: nim-presentation-pdf
-          path: presentations/nim-presentation.pdf
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build HTML
-        run: npm run build:html
-
-      - name: Prepare publish directory
-        run: |
-          mkdir -p gh-pages
-          cp presentations/nim-presentation.html gh-pages/index.html
-          cp -r assets gh-pages/assets || true
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -86,8 +38,16 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './gh-pages'
+          path: presentations
 
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4 
