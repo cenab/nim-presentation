@@ -317,13 +317,22 @@ Cenab Batu Bora¹, Julia Silva Weber², Nur Zincir-Heywood²
 
 # Visualizing the Traffic Generation Framework
 
-<video src="../assets/Real-life%20Click%20Farm.mp4" autoplay loop muted playsinline style="display: block; margin: auto; max-height: 75vh; max-width: 100%;"></video>
+<video src="../assets/Real-life%20Click%20Farm.mp4" autoplay loop muted playsinline style="display: block; margin: auto; width: 100%; height: calc(100vh - 500px);"></video>
 
 ---
 
 # Traffic Generation Architecture
 
-<div style="background-color: #f8f9fa; border-radius: 8px; height: 60vh; max-height: 60vh;">
+<style>
+.diagram-bg {
+  border-radius: 8px;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+}
+</style>
+
+<div class="diagram-bg">
 
 ```mermaid
 %%{init: {
@@ -332,20 +341,21 @@ Cenab Batu Bora¹, Julia Silva Weber², Nur Zincir-Heywood²
     'primaryColor': '#e1f5fe',
     'primaryTextColor': '#000',
     'primaryBorderColor': '#00b0ff',
-    'lineColor': '#00b0ff',
+    'lineColor': '#fff',
     'secondaryColor': '#f3e5f5',
     'tertiaryColor': '#fff3e0',
     'fontSize': '32px',
     'messageFontSize': '32px',
     'messageFont': 'arial',
-    'nodeFontSize': '32px'
+    'nodeFontSize': '32px',
+    'lineWidth': '200px'
   },
   'flowchart': {
     'nodeSpacing': 40,
     'rankSpacing': 50,
     'padding': 10,
     'width': 1600,
-    'height': 500,
+    'height': 800,
     'diagramPadding': 0,
     'htmlLabels': true,
     'curve': 'basis'
@@ -393,6 +403,7 @@ graph LR
     style Orchestrator font-weight:bold,font-size:32px
     style Server font-weight:bold,font-size:32px
     style GC font-weight:bold,font-size:32px
+    linkStyle default stroke-width:20px,stroke:#fff
 ```
 
 </div>
@@ -401,7 +412,16 @@ graph LR
 
 # Traffic Preprocessing Pipeline
 
-<div style="background-color: #f8f9fa; border-radius: 8px; height: 60vh; max-height: 60vh;">
+<style>
+.diagram-bg {
+  border-radius: 8px;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+}
+</style>
+
+<div class="diagram-bg">
 
 ```mermaid
 %%{init: {
@@ -410,7 +430,7 @@ graph LR
     'primaryColor': '#e1f5fe',
     'primaryTextColor': '#000',
     'primaryBorderColor': '#00b0ff',
-    'lineColor': '#00b0ff',
+    'lineColor': '#fff',
     'secondaryColor': '#f3e5f5',
     'tertiaryColor': '#fff3e0',
     'fontSize': '40px',
@@ -418,14 +438,14 @@ graph LR
     'messageFont': 'arial',
     'nodeFontSize': '40px',
     'edgeLabelBackground': '#ffffff',
-    'lineWidth': '20px'
+    'lineWidth': '200px'
   },
   'flowchart': {
     'nodeSpacing': 50,
     'rankSpacing': 80,
     'padding': 20,
     'width': 1600,
-    'height': 500,
+    'height': 800,
     'diagramPadding': 10,
     'htmlLabels': true,
     'curve': 'basis'
@@ -470,7 +490,7 @@ graph LR
     class C output
 
     %% Link styling
-    linkStyle default stroke-width:8px
+    linkStyle default stroke-width:20px,stroke:#fff
 ```
 
 </div>
@@ -514,7 +534,7 @@ graph LR
 ---
 # ML Architecture
 
-<div style="background-color: #f8f9fa; border-radius: 8px; height: 60vh; max-height: 60vh;">
+<div class="diagram-bg">
 
 ```mermaid
 %%{init: {
@@ -523,7 +543,7 @@ graph LR
     'primaryColor': '#e1f5fe',
     'primaryTextColor': '#000',
     'primaryBorderColor': '#00b0ff',
-    'lineColor': '#00b0ff',
+    'lineColor': '#fff',
     'secondaryColor': '#f3e5f5',
     'tertiaryColor': '#fff3e0',
     'fontSize': '40px',
@@ -531,14 +551,14 @@ graph LR
     'messageFont': 'arial',
     'nodeFontSize': '40px',
     'edgeLabelBackground': '#ffffff',
-    'lineWidth': '20px'
+    'lineWidth': '200px'
   },
   'flowchart': {
     'nodeSpacing': 50,
     'rankSpacing': 80,
     'padding': 20,
     'width': 1600,
-    'height': 500,
+    'height': 800,
     'diagramPadding': 10,
     'htmlLabels': true,
     'curve': 'basis'
@@ -588,7 +608,7 @@ graph LR
     class E,H output
 
     %% Link styling
-    linkStyle default stroke-width:4px
+    linkStyle default stroke-width:20px,stroke:#fff
 ```
 
 </div>
