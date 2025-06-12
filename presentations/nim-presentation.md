@@ -44,10 +44,10 @@ Cenab Batu Bora¹, Julia Silva Weber², Nur Zincir-Heywood²
 <div style="flex: 1; background-color: #fff0f0; border-left: 5px solid #c62828; padding: 1.2em; border-radius: 8px;">
 <h3 style="margin-top: 0; color: #c62828;">The Challenge: A Network Black Box</h3>
 <ul style="list-style-type: none; padding-left: 0; color: #333;">
-  <li style="margin-bottom: 0.8em;  color: #333;"><strong>Encrypted Traffic:</strong> Renders content inspection (DPI) obsolete.</li>
-  <li style="margin-bottom: 0.8em;  color: #333;"><strong>Context-Blind Policies:</strong> Firewalls see IPs, not distinct applications.</li>
-  <li style="margin-bottom: 0.8em;  color: #333;"><strong>Invisible User Actions:</strong> Impossible to distinguish chats from sensitive file transfers.</li>
-  <li style="color: #333;"><strong>BYOD Amplifies Risk:</strong> Unmanaged personal devices create security gaps.</li>
+  <li style="margin-bottom: 0.8em;  color: #333;"><strong>Encrypted Traffic:</strong> DPI obsolete</li>
+  <li style="margin-bottom: 0.8em;  color: #333;"><strong>Context-Blind Policies:</strong> IP-based, no app context</li>
+  <li style="margin-bottom: 0.8em;  color: #333;"><strong>Invisible User Actions:</strong> Chats vs. file transfers indistinguishable</li>
+  <li style="color: #333;"><strong>BYOD Amplifies Risk:</strong> Unmanaged devices, security gaps</li>
 </ul>
 </div>
 
@@ -99,25 +99,43 @@ Cenab Batu Bora¹, Julia Silva Weber², Nur Zincir-Heywood²
   <!-- ML Models -->
   <div style="background-color: #f3e5f5; border-left: 5px solid #6a1b9a; padding: 0.8em; border-radius: 8px;">
     <h4 style="margin: 0; color: #6a1b9a; font-size: 1.1em;">Cloud-Native Traffic Generation</h4>
-    <p style="margin: 0.5em 0 0 0; color: #333; font-size: 0.9em;">Scalable cloud framework emulates Android devices to generate realistic traffic, enabling robust ML training without specialized hardware.</p>
+    <ul style="margin: 0.2em 0 0 1em; color: #333; font-size: 0.9em; padding-left: 1em;">
+      <li style="margin: 0.2em 0 0 0; color: #333; font-size: 0.9em;">Scalable cloud framework</li>
+      <li style="margin: 0.2em 0 0 0; color: #333; font-size: 0.9em;">Emulates Android devices</li>
+      <li style="margin: 0.2em 0 0 0; color: #333; font-size: 0.9em;">Realistic traffic generation</li>
+      <li style="margin: 0.2em 0 0 0; color: #333; font-size: 0.9em;">No specialized hardware</li>
+    </ul>
   </div>
   
   <!-- Classification -->
   <div style="background-color: #e8f5e9; border-left: 5px solid #2e7d32; padding: 0.8em; border-radius: 8px;">
     <h4 style="margin: 0; color: #2e7d32; font-size: 1.1em;">Dynamic Traffic Isolation</h4>
-    <p style="margin: 0.5em 0 0 0; color: #333; font-size: 0.9em;">Combines time analysis, TLS SNI, and IP whitelisting to isolate app traffic by adapting to dynamic network changes.</p>
+    <ul style="margin: 0.2em 0 0 1em; color: #333; font-size: 0.9em; padding-left: 1em;">
+      <li style="margin: 0.2em 0 0 0; color: #333; font-size: 0.9em;">Time analysis</li>
+      <li style="margin: 0.2em 0 0 0; color: #333; font-size: 0.9em;">TLS SNI</li>
+      <li style="margin: 0.2em 0 0 0; color: #333; font-size: 0.9em;">IP whitelisting</li>
+      <li style="margin: 0.2em 0 0 0; color: #333; font-size: 0.9em;">Adaptive isolation</li>
+    </ul>
   </div>
   
   <!-- Privacy -->
   <div style="background-color: #fff3e0; border-left: 5px solid #e65100; padding: 0.8em; border-radius: 8px;">
     <h4 style="margin: 0; color: #e65100; font-size: 1.1em;">Environment-Agnostic Feature Engineering</h4>
-    <p style="margin: 0.5em 0 0 0; color: #333; font-size: 0.9em;">Isolates core communication patterns and ignores network-specific metrics to build robust, environment-independent models.</p>
+    <ul style="margin: 0.2em 0 0 1em; color: #333; font-size: 0.9em; padding-left: 1em;">
+      <li style="margin: 0.2em 0 0 0; color: #333; font-size: 0.9em;">Core communication patterns</li>
+      <li style="margin: 0.2em 0 0 0; color: #333; font-size: 0.9em;">Ignore network-specific metrics</li>
+      <li style="margin: 0.2em 0 0 0; color: #333; font-size: 0.9em;">Robust models</li>
+    </ul>
   </div>
   
   <!-- Zero Trust -->
   <div style="background-color: #e3f2fd; border-left: 5px solid #1565c0; padding: 0.8em; border-radius: 8px;">
     <h4 style="margin: 0; color: #1565c0; font-size: 1.1em;">Granular Identity-Aware Visibility</h4>
-    <p style="margin: 0.5em 0 0 0; color: #333; font-size: 0.9em;">ML models identify app, device, and action from encrypted traffic, providing granular visibility (e.g., 'User A is on Signal') without decryption.</p>
+    <ul style="margin: 0.2em 0 0 1em; color: #333; font-size: 0.9em; padding-left: 1em;">
+      <li style="margin: 0.2em 0 0 0; color: #333; font-size: 0.9em;">App, device, action ID from encrypted traffic</li>
+      <li style="margin: 0.2em 0 0 0; color: #333; font-size: 0.9em;">Granular visibility</li>
+      <li style="margin: 0.2em 0 0 0; color: #333; font-size: 0.9em;">No decryption</li>
+    </ul>
   </div>
 </div>
 
@@ -134,9 +152,9 @@ Cenab Batu Bora¹, Julia Silva Weber², Nur Zincir-Heywood²
 <div style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-radius: 8px; padding: 1.2em; border-left: 5px solid #2e7d32;">
   <h3 style="color: #2e7d32; margin: 0; font-size: 1.2em;">1. ML-Based Encrypted Traffic Analysis</h3>
   <div style="margin-top: 0.8em; color: #1b5e20;">
-    <p style="margin: 0.5em 0;">Advanced metadata analysis for encrypted traffic</p>
-    <p style="margin: 0.5em 0;">High-accuracy detection of user actions and apps</p>
-    <p style="margin: 0.5em 0;">Identity-driven approach to network monitoring</p>
+    <p style="margin: 0.5em 0;">Advanced metadata analysis, encrypted traffic</p>
+    <p style="margin: 0.5em 0;">High-accuracy user action & app detection</p>
+    <p style="margin: 0.5em 0;">Identity-driven network monitoring</p>
   </div>
 </div>
 
@@ -144,9 +162,9 @@ Cenab Batu Bora¹, Julia Silva Weber², Nur Zincir-Heywood²
 <div style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-radius: 8px; padding: 1.2em; border-left: 5px solid #1565c0;">
   <h3 style="color: #1565c0; margin: 0; font-size: 1.2em;">2. Cloud-Native Traffic Generation</h3>
   <div style="margin-top: 0.8em; color: #0d47a1;">
-    <p style="margin: 0.5em 0;">Scalable framework for diverse traffic datasets</p>
-    <p style="margin: 0.5em 0;">No dependency on sensitive live user data</p>
-    <p style="margin: 0.5em 0;">Enables robust ML model development</p>
+    <p style="margin: 0.5em 0;">Scalable, diverse traffic datasets</p>
+    <p style="margin: 0.5em 0;">No sensitive live user data</p>
+    <p style="margin: 0.5em 0;">Robust ML model development</p>
   </div>
 </div>
 
@@ -155,8 +173,8 @@ Cenab Batu Bora¹, Julia Silva Weber², Nur Zincir-Heywood²
   <h3 style="color: #6a1b9a; margin: 0; font-size: 1.2em;">3. Realistic Behavior Simulation</h3>
   <div style="margin-top: 0.8em; color: #4a148c;">
     <p style="margin: 0.5em 0;">Simulates natural conversation patterns</p>
-    <p style="margin: 0.5em 0;">Creates detailed traffic signatures</p>
-    <p style="margin: 0.5em 0;">Enables precise app and device identification</p>
+    <p style="margin: 0.5em 0;">Detailed traffic signatures</p>
+    <p style="margin: 0.5em 0;">Precise app & device identification</p>
   </div>
 </div>
 
@@ -505,10 +523,10 @@ graph LR
 <h3 style="margin-top: 0; color: #1565c0;">App & Device Identification</h3>
 <p style="color: #333;">A multi-output model was trained to predict both the application and its source device from a single traffic flow.</p>
 <ul style="padding-left: 1.2em;">
-  <li style="margin-bottom: 0.5em; color: #333;"><strong>Feature Selection:</strong> ANOVA F-value analysis on 109 raw features to find key identifiers like `tcpMSS`.</li>
-  <li style="margin-bottom: 0.5em; color: #333;"><strong>Models Evaluated:</strong> Tree-based classifiers (Decision Tree, Random Forest, Gradient Boosting).</li>
-  <li style="margin-bottom: 0.5em; color: #333;"><strong>Top Performer:</strong> Gradient Boosting delivered the highest accuracy for IMA identification.</li>
-  <li style="color: #333;"><strong>Validation:</strong> Rigorous 10-fold cross-validation ensured model robustness.</li>
+  <li style="margin-bottom: 0.5em; color: #333;"><strong>Feature Selection:</strong> ANOVA F-value, 109 features, key: tcpMSS</li>
+  <li style="margin-bottom: 0.5em; color: #333;"><strong>Models Evaluated:</strong> Decision Tree, Random Forest, Gradient Boosting</li>
+  <li style="margin-bottom: 0.5em; color: #333;"><strong>Top Performer:</strong> Gradient Boosting, highest IMA accuracy</li>
+  <li style="color: #333;"><strong>Validation:</strong> 10-fold cross-validation, robust model</li>
 </ul>
 </div>
 
@@ -522,10 +540,10 @@ graph LR
 <h3 style="margin-top: 0; color: #2e7d32;">User Action Classification</h3>
 <p style="color: #333;">A binary classifier was built to distinguish between group chats and 1-on-1 messages as a proof-of-concept.</p>
 <ul style="padding-left: 1.2em;">
-  <li style="margin-bottom: 0.5em; color: #333;"><strong>Dataset:</strong> Combined our group chat data with a public 1-on-1 chat dataset for diverse patterns.</li>
-  <li style="margin-bottom: 0.5em; color: #333;"><strong>Feature Engineering:</strong> Focused on environment-agnostic patterns (e.g., timing ratios), excluding network-specific metrics.</li>
-  <li style="margin-bottom: 0.5em; color: #333;"><strong>Top Performer:</strong> Gradient Boosting again proved most effective.</li>
-  <li style="color: #333;"><strong>Insight:</strong> Confirmed that distinct user actions have unique, classifiable metadata signatures.</li>
+  <li style="margin-bottom: 0.5em; color: #333;"><strong>Dataset:</strong> Group chat + public 1-on-1 dataset, diverse patterns</li>
+  <li style="margin-bottom: 0.5em; color: #333;"><strong>Feature Engineering:</strong> Environment-agnostic patterns, timing ratios</li>
+  <li style="margin-bottom: 0.5em; color: #333;"><strong>Top Performer:</strong> Gradient Boosting, most effective</li>
+  <li style="color: #333;"><strong>Insight:</strong> Distinct user actions, unique metadata signatures</li>
 </ul>
 </div>
 
@@ -665,16 +683,16 @@ graph LR
 
 # NIM as a Concept
 
-- **Core Idea**: NIM uses encrypted traffic metadata to identify the application, device, and user actions without decryption.
-- **Access Control**: It enables role-based access control (RBAC) for encrypted applications.
-  - Organizations define access groups (e.g., Developers, Executives).
-  - Permissions for applications are assigned to these groups.
+- **Core Idea**: Encrypted traffic metadata → app, device, action (no decryption)
+- **Access Control**: Role-based (RBAC) for encrypted apps
+  - Access groups (e.g., Developers, Executives)
+  - App permissions assigned to groups
 - **How it Works**:
-  1. Traffic metadata is collected from network points (firewalls, switches).
-  2. An ML engine classifies traffic, identifying the app, device, and action.
-  3. A policy engine combines this with user identity and group data.
-  4. Access rules are enforced via existing infrastructure (SDN, VPNs).
-- **Proactive Security**: NIM can proactively block unauthorized application access, aligning with Zero Trust principles.
+  1. Collect traffic metadata (firewalls, switches)
+  2. ML engine: app, device, action classification
+  3. Policy engine: combine with user/group identity
+  4. Enforce via SDN, VPNs, existing infra
+- **Proactive Security**: Proactive app access blocking, Zero Trust
 
 
 ---
@@ -682,13 +700,13 @@ graph LR
 # Future Work
 
 - **Scale the Data Generation**:
-  - Increase the number of user groups to twenty or more.
-  - Capture richer and more complex multi-user dynamics.
+  - 20+ user groups
+  - Richer, complex multi-user dynamics
 
 - **Explore Federated Learning**:
-  - Train models in a distributed manner without centralizing sensitive data.
-  - Enhances user privacy.
-  - Allows for collaborative improvements to NIM models across organizations.
+  - Distributed model training, no central data
+  - Enhanced privacy
+  - Collaborative NIM model improvements
 
 ---
 
