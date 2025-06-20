@@ -20,7 +20,7 @@
 
 "Think about what we're dealing with: Universal encryption – which is fantastic for privacy, don't get me wrong – but it completely neutralizes our traditional deep-packet inspection tools. Meanwhile, our firewalls are still stuck speaking the language of IPs and ports when what we really need to understand is applications and user intent."
 
-"And then there's the BYOD revolution. Every employee walks in with their personal devices, flooding our networks with endpoints we simply can't manage. The result? We're facing this impossible trust dilemma where we're constantly forced to choose between privacy, visibility, and control."
+"BYOD floods the network with unmanaged personal devices, creating a hard trade-off between privacy and visibility."
 
 ---
 
@@ -66,8 +66,6 @@
 
 "Stage one: Generate realistic traffic using what we call a scalable click-farm emulator. Stage two: Isolate individual application flows using a combination of port timing analysis, TLS-SNI inspection, and IPs. And stage three: Build and evaluate our ML pipeline with careful feature selection and cross-validation."
 
-"Each stage builds on the previous one, and we made sure to validate our approach at every step before moving forward."
-
 ---
 
 ### **7 · Traffic Generation System**
@@ -106,7 +104,7 @@
 
 "Now we get to the heart of our approach: the machine learning models. For **application and device identification**, we use a **multi-output Gradient Boosting** model, and the results have been quite encouraging."
 
-"We start with 109 raw features extracted from the traffic flows, but we use **ANOVA F-value** analysis to trim this down to the most informative metrics. Things like `tcpMSS`, burst timing patterns, packet size distributions – features that really capture the essence of how different applications behave."
+"From 109 raw features we keep only the strongest few—metrics like `tcpMSS` and burst timing—selected via **ANOVA F-value**."
 
 "We validate everything with **ten-fold cross-validation** to make sure our results are robust and not just overfitting to our particular dataset. The model achieves **98 to 99 percent F1 scores** for application identification and essentially **perfect accuracy** for device identification."
 
@@ -120,7 +118,7 @@
 
 "We use a binary Gradient Boosting classifier for this, and while the overall F1 score is **73 percent**, the performance varies quite a bit across different messaging platforms. Discord and Telegram work beautifully – we can classify their conversation types with high accuracy. Signal, on the other hand, remains more challenging."
 
-"But here's the key insight: the fact that we can do this at all demonstrates that user actions do embed distinct, learnable signatures in the metadata. That opens up a whole new dimension of network understanding that we haven't had access to before."
+"But here's the key insight: the fact that we can do this at all demonstrates that user actions do embed distinct, learnable signatures in the metadata."
 
 ---
 
@@ -181,22 +179,3 @@
 "Thank you for your attention, and let's open this up for discussion."
 
 ---
-
-### **Timing & Delivery Guide**
-
-| Section                   | Slides | Time  | Delivery Notes |
-| ------------------------- | ------ | ----- | -------------- |
-| Motivation & Question     | 1–3    | 2 min | Engage with shared challenges |
-| Framework & Contributions | 4–5    | 2 min | Build excitement for approach |
-| Methods                   | 6–10   | 3 min | Tell the research story |
-| Models & Results          | 11–14  | 3 min | Share discoveries enthusiastically |
-| Concept, Future, Close    | 15–17  | 2 min | Invite collaboration |
-
-*≈ 12 min total; natural pauses and audience engagement will adjust timing organically.*
-
-### **Delivery Tips**
-- **Make eye contact** during key points and transitions
-- **Use natural gestures** when describing technical concepts
-- **Pause for emphasis** after important results
-- **Vary your pace** – slower for complex concepts, energetic for exciting results
-- **Watch the audience** and adjust technical depth based on their engagement

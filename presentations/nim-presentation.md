@@ -317,14 +317,51 @@ Cenab Batu Bora¹, Julia Silva Weber², Nur Zincir-Heywood²
 <div style="flex: 1;">
 
 ### Dialogue Schedule Example
-| Dialogue | Device | IMA | Wait Time (s) |
-|----------|--------|-----|---------------|
-| Nay, answer me. ... | 3 | signal | 45 |
-| He. ... | 2 | signal | 60 |
-| You come most ... | 3 | teams | 55 |
-| Not a mouse ... | 3 | skype | 58 |
-| Well, good night. ... | 1 | signal | 33 |
-| *... conversation continues ...* | | | |
+<table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+  <thead>
+    <tr style="border-bottom: 1px solid #ddd;">
+      <th style="padding: 6px 12px; text-align: left;">Dialogue</th>
+      <th style="padding: 6px 12px; text-align: left;">Device</th>
+      <th style="padding: 6px 12px; text-align: left;">IMA</th>
+      <th style="padding: 6px 12px; text-align: left;">Wait Time (s)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 6px 12px; text-align: left; border-top: 1px solid #ddd;">Nay, answer me. ...</td>
+      <td style="padding: 6px 12px; text-align: left; border-top: 1px solid #ddd;">3</td>
+      <td style="padding: 6px 12px; text-align: left; border-top: 1px solid #ddd;">signal</td>
+      <td style="padding: 6px 12px; text-align: left; border-top: 1px solid #ddd;">45</td>
+    </tr>
+    <tr>
+      <td style="padding: 6px 12px; text-align: left; border-top: 1px solid #ddd;">He. ...</td>
+      <td style="padding: 6px 12px; text-align: left; border-top: 1px solid #ddd;">2</td>
+      <td style="padding: 6px 12px; text-align: left; border-top: 1px solid #ddd;">signal</td>
+      <td style="padding: 6px 12px; text-align: left; border-top: 1px solid #ddd;">60</td>
+    </tr>
+    <tr>
+      <td style="padding: 6px 12px; text-align: left; border-top: 1px solid #ddd;">You come most ...</td>
+      <td style="padding: 6px 12px; text-align: left; border-top: 1px solid #ddd;">3</td>
+      <td style="padding: 6px 12px; text-align: left; border-top: 1px solid #ddd;">teams</td>
+      <td style="padding: 6px 12px; text-align: left; border-top: 1px solid #ddd;">55</td>
+    </tr>
+    <tr>
+      <td style="padding: 6px 12px; text-align: left; border-top: 1px solid #ddd;">Not a mouse ...</td>
+      <td style="padding: 6px 12px; text-align: left; border-top: 1px solid #ddd;">3</td>
+      <td style="padding: 6px 12px; text-align: left; border-top: 1px solid #ddd;">skype</td>
+      <td style="padding: 6px 12px; text-align: left; border-top: 1px solid #ddd;">58</td>
+    </tr>
+    <tr>
+      <td style="padding: 6px 12px; text-align: left; border-top: 1px solid #ddd;">Well, good night. ...</td>
+      <td style="padding: 6px 12px; text-align: left; border-top: 1px solid #ddd;">1</td>
+      <td style="padding: 6px 12px; text-align: left; border-top: 1px solid #ddd;">signal</td>
+      <td style="padding: 6px 12px; text-align: left; border-top: 1px solid #ddd;">33</td>
+    </tr>
+    <tr>
+      <td colspan="4" style="padding: 6px 12px; text-align: center; border-top: 1px solid #ddd; font-style: italic;">... conversation continues ...</td>
+    </tr>
+  </tbody>
+</table>
 
 </div>
 
