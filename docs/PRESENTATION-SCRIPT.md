@@ -159,9 +159,6 @@
 "First, we want to **scale up** our data generation to larger, more diverse user groups. The current work proves the concept, but we need to validate it across more varied communication patterns and user behaviors."
 
 "But what I'm most excited about is investigating **federated learning** approaches. Imagine if organizations could train these models locally on their own traffic patterns and then share only the model gradients – not the raw data – to improve everyone's models. This could give us the benefits of large-scale training while preserving privacy at an even deeper level."
-
-"This could be a game-changer for how we approach collaborative security research in our community."
-
 ---
 
 ### **17 · Conclusion & Discussion**
