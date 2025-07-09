@@ -1,7 +1,5 @@
 # Network Identity Management (NIM) - Conversational Presentation Script
 
-*A fluent, engaging speaker script for academic conference presentation (≈ 10–12 min)*
-
 ---
 
 ### **1 · Title – Network Identity Management**
@@ -18,19 +16,19 @@
 
 "Let's begin with a challenge common to modern enterprise networks. Our enterprise networks have essentially become black boxes to us, and frankly, it's becoming a real problem."
 
-"Think about what we're dealing with: Universal encryption – which is fantastic for privacy, don't get me wrong – but it completely neutralizes our traditional deep-packet inspection tools. Meanwhile, our firewalls are still stuck speaking the language of IPs and ports when what we really need to understand is applications and user intent."
+"Think about what we're dealing with: Universal encryption – which is fantastic for privacy, don't get me wrong – but it completely neutralizes our traditional deep-packet inspection tools. Meanwhile, our firewalls are limited to IPs and ports when what we really need to understand is applications and user intent."
 
-"BYOD floods the network with unmanaged personal devices, creating a hard trade-off between privacy and visibility."
+"BYOD brings in a layer of network that consists of unmanaged personal devices, which creates a hard trade-off between privacy and visibility."
 
 ---
 
 ### **3 · Research Question & Approach**
 
-"This led us to ask a fundamental question that often arises in network security circles:"
+"This led us to ask a fundamental question:"
 
-> *How can we regain meaningful visibility into encrypted BYOD traffic without compromising the very privacy and encryption that we're trying to protect?*
+> *How can we regain meaningful visibility into encrypted traffic without compromising the very privacy and encryption that we're trying to protect?*
 
-"Now, here's where it gets interesting. Instead of trying to break or bypass encryption – which would be both ethically problematic and technically challenging – we decided to look at what's hiding in plain sight: the metadata."
+"Now, here's where our approach starts to differ. Instead of trying to break or bypass encryption – which would be both ethically problematic and technically challenging – we decided to look at the metadata."
 
 "We realized that metadata carries incredibly rich signals about application behavior, device characteristics, and even user actions. So we developed machine learning models that can identify not just what application is being used, but which device is running it and what the user is actually doing – all while leaving the encrypted payload completely untouched."
 
